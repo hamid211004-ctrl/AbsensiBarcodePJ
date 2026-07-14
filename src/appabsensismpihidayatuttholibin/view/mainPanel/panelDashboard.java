@@ -180,7 +180,7 @@ public class panelDashboard extends javax.swing.JPanel {
                     + "WHERE status='Izin' "
                     + "AND tanggal = CURDATE();");
             if (rs.next()) {
-                lblIzin.setText(rs.getString("jumlah"));
+                lblSakit.setText(rs.getString("jumlah"));
             }
 
             // Sakit
@@ -189,7 +189,7 @@ public class panelDashboard extends javax.swing.JPanel {
                     + "WHERE status='Sakit' "
                     + "AND tanggal = CURDATE();");
             if (rs.next()) {
-                lblSakit.setText(rs.getString("jumlah"));
+                lblIzin.setText(rs.getString("jumlah"));
             }
 
             // Alpa
@@ -370,11 +370,11 @@ public class panelDashboard extends javax.swing.JPanel {
         panelIzin = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        lblIzin = new javax.swing.JLabel();
+        lblSakit = new javax.swing.JLabel();
         panelSakit = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        lblSakit = new javax.swing.JLabel();
+        lblIzin = new javax.swing.JLabel();
         panelAlfa = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
@@ -602,11 +602,11 @@ public class panelDashboard extends javax.swing.JPanel {
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appabsensismpihidayatuttholibin/Icon/Frame 21 (1).png"))); // NOI18N
 
         jLabel5.setFont(new java.awt.Font("Poppins Medium", 0, 16)); // NOI18N
-        jLabel5.setText("Izin");
+        jLabel5.setText("Sakit");
 
-        lblIzin.setFont(new java.awt.Font("Poppins SemiBold", 0, 36)); // NOI18N
-        lblIzin.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblIzin.setText("0");
+        lblSakit.setFont(new java.awt.Font("Poppins SemiBold", 0, 36)); // NOI18N
+        lblSakit.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblSakit.setText("0");
 
         javax.swing.GroupLayout panelIzinLayout = new javax.swing.GroupLayout(panelIzin);
         panelIzin.setLayout(panelIzinLayout);
@@ -617,9 +617,9 @@ public class panelDashboard extends javax.swing.JPanel {
                 .addGroup(panelIzinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelIzinLayout.createSequentialGroup()
                         .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                         .addComponent(jLabel5))
-                    .addComponent(lblIzin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblSakit, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panelIzinLayout.setVerticalGroup(
@@ -630,7 +630,7 @@ public class panelDashboard extends javax.swing.JPanel {
                     .addComponent(jLabel4)
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblIzin, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblSakit, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -642,11 +642,11 @@ public class panelDashboard extends javax.swing.JPanel {
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appabsensismpihidayatuttholibin/Icon/Frame 20 (1).png"))); // NOI18N
 
         jLabel7.setFont(new java.awt.Font("Poppins Medium", 0, 16)); // NOI18N
-        jLabel7.setText("Sakit");
+        jLabel7.setText("Izin");
 
-        lblSakit.setFont(new java.awt.Font("Poppins SemiBold", 0, 36)); // NOI18N
-        lblSakit.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSakit.setText("0");
+        lblIzin.setFont(new java.awt.Font("Poppins SemiBold", 0, 36)); // NOI18N
+        lblIzin.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblIzin.setText("0");
 
         javax.swing.GroupLayout panelSakitLayout = new javax.swing.GroupLayout(panelSakit);
         panelSakit.setLayout(panelSakitLayout);
@@ -657,9 +657,9 @@ public class panelDashboard extends javax.swing.JPanel {
                 .addGroup(panelSakitLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelSakitLayout.createSequentialGroup()
                         .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
                         .addComponent(jLabel7))
-                    .addComponent(lblSakit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblIzin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panelSakitLayout.setVerticalGroup(
@@ -670,7 +670,7 @@ public class panelDashboard extends javax.swing.JPanel {
                     .addComponent(jLabel6)
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblSakit, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblIzin, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
