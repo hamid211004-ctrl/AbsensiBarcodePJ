@@ -5,6 +5,9 @@
 package appabsensismpihidayatuttholibin.view.mainPanel;
 
 import appabsensismpihidayatuttholibin.Config.Koneksi;
+import appabsensismpihidayatuttholibin.view.popupTambah.tambahGuru;
+import appabsensismpihidayatuttholibin.view.popupUbah.ubahGuru;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -13,14 +16,14 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
-import appabsensismpihidayatuttholibin.view.popupTambah.tambahGuru;
-import appabsensismpihidayatuttholibin.view.popupUbah.ubahGuru;
 import java.awt.HeadlessException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
@@ -31,67 +34,70 @@ import javax.swing.table.DefaultTableModel;
  * @author ASUS
  */
 public class panelGuru extends javax.swing.JPanel {
-private String nipDipilih;
-private String namaDipilih;
-private String jkDipilih;
-private String tglDipilih;
-private String alamatDipilih;
-private String hpDipilih;
+
+    // Menyimpan data guru yang dipilih pada tabel.
+    private String nipDipilih;
+    private String namaDipilih;
+    private String jkDipilih;
+    private String tglDipilih;
+    private String alamatDipilih;
+    private String hpDipilih;
 
     /**
      * Creates new form panelGuru
      */
     public panelGuru() {
         initComponents();
-        customTable();
-        
-        load_tabel_guru();
+
+        customTable(); // Mengatur tampilan tabel.
+        load_tabel_guru(); // Memuat data guru ke tabel.
     }
-    
+
     //custom untuk header tabel
     private void customTable() {
-    tblGuru.setRowHeight(40);
+        tblGuru.setRowHeight(40);// Mengatur tinggi setiap baris tabel.
 
-    JTableHeader header = tblGuru.getTableHeader();
-    header.setPreferredSize(new Dimension(100, 40));
+        JTableHeader header = tblGuru.getTableHeader();
+        header.setPreferredSize(new Dimension(100, 40));// Mengatur tinggi header.
 
-    header.setDefaultRenderer(new DefaultTableCellRenderer() {
-        @Override
-        public Component getTableCellRendererComponent(
-                JTable table, Object value,
-                boolean isSelected, boolean hasFocus,
-                int row, int column) {
+        header.setDefaultRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(
+                    JTable table, Object value,
+                    boolean isSelected, boolean hasFocus,
+                    int row, int column) {
 
-            JLabel label = (JLabel) super.getTableCellRendererComponent(
-                    table, value, isSelected, hasFocus, row, column);
+                JLabel label = (JLabel) super.getTableCellRendererComponent(
+                        table, value, isSelected, hasFocus, row, column);
 
-            label.setBackground(new Color(42, 76, 102));
-            label.setForeground(Color.WHITE);
-            label.setFont(new Font("Segoe UI", Font.BOLD, 14));
-            label.setOpaque(true);
+                label.setBackground(new Color(42, 76, 102));
+                label.setForeground(Color.WHITE);
+                label.setFont(new Font("Segoe UI", Font.BOLD, 14));
+                label.setOpaque(true);
 
-            return label;
-        }
-    });
-}
-    
-    
-    //membuat method untuk memanggil pop up JDialog
-    private void popupTambah(java.awt.event.ActionEvent evt){
-        
-        tambahGuru dialog = new tambahGuru(
-        (java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(this),true,this
-        );
-        dialog.setLocationRelativeTo(null);
-        dialog.setVisible(true);
+                return label;
+            }
+        });
     }
- 
-    
+
+    // Method untuk menampilkan dialog tambah data guru.
+    private void popupTambah(java.awt.event.ActionEvent evt) {
+
+        tambahGuru dialog = new tambahGuru(
+                (java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(this),
+                true,
+                this
+        );
+
+        dialog.setLocationRelativeTo(null); // Menampilkan dialog di tengah layar.
+        dialog.setVisible(true); // Menampilkan dialog.
+    }
+
     //membuat method untuk menampilkan data guru
-    public void load_tabel_guru(){
+    public void load_tabel_guru() {
         //membuat objek model tabel baru
         DefaultTableModel model = new DefaultTableModel();
-        
+
         //Menambahkan kolom ke dalam model table
         model.addColumn("NIP/NIY");
         model.addColumn("Nama Guru");
@@ -99,7 +105,7 @@ private String hpDipilih;
         model.addColumn("Tanggal Lahir");
         model.addColumn("Alamat");
         model.addColumn("No Telepon");
-        
+
         try {
             //Query SQL untuk mengambil semua data dari tabel guru
             String sql = "SELECT nip, nama_guru, jenis_kelamin, alamat, tgl_lahir, no_telepon FROM guru";
@@ -122,8 +128,6 @@ private String hpDipilih;
                 String tanggal = rs.getString("tgl_lahir");
                 String alamat = rs.getString("alamat");
                 String no = rs.getString("no_telepon");
-                
-                
 
                 //menyusun data kedalam array objek
                 Object[] baris = {NIP, namaGuru, JK, tanggal, alamat, no};
@@ -143,7 +147,7 @@ private String hpDipilih;
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
      * regenerated by the Form Editor.
-     * 
+     *
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -371,25 +375,25 @@ private String hpDipilih;
 
     private void BtnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnTambahActionPerformed
         // TODO add your handling code here:
-        popupTambah(evt);
+        popupTambah(evt); // Memanggil method untuk membuka form tambah guru.
     }//GEN-LAST:event_BtnTambahActionPerformed
 
     private void tblGuruMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblGuruMouseClicked
         // TODO add your handling code here:
-        //Ambil indeks baris yang diklik oleh pengguna ditabel tblGuru
+        // Mengambil indeks baris yang dipilih.
         int barisYangDipilih = tblGuru.rowAtPoint(evt.getPoint());
-        
-        //Ambil nilai baris yang dipilih pada tabel guru
+
+        // Mengambil data utama dari baris yang dipilih.
         nipDipilih = tblGuru.getValueAt(barisYangDipilih, 0).toString();
         namaDipilih = tblGuru.getValueAt(barisYangDipilih, 1).toString();
-        
-        // Mengambil objek dari tabel
+
+        // Mengambil data lainnya dari tabel.
         Object jkObj = tblGuru.getValueAt(barisYangDipilih, 2);
         Object tglObj = tblGuru.getValueAt(barisYangDipilih, 3);
         Object alamatObj = tblGuru.getValueAt(barisYangDipilih, 4);
         Object hpObj = tblGuru.getValueAt(barisYangDipilih, 5);
-        
-        
+
+        // Menghindari nilai null pada data yang dipilih.
         jkDipilih = (jkObj != null) ? jkObj.toString() : "";
         tglDipilih = (tglObj != null) ? tglObj.toString() : null;
         alamatDipilih = (alamatObj != null) ? alamatObj.toString() : "";
@@ -398,17 +402,20 @@ private String hpDipilih;
 
     private void BtnUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnUbahActionPerformed
         // TODO add your handling code here:
-        if (nipDipilih == null){
+        // Memastikan pengguna telah memilih data guru.
+        if (nipDipilih == null) {
             JOptionPane.showMessageDialog(this, "Silakan pilih terlebih dahulu");
             return;
         }
-        
+
+        // Membuat dialog ubah guru.
         ubahGuru dialog = new ubahGuru(
                 (java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(this),
-                true, 
+                true,
                 this
         );
-        
+
+        // Mengirim data guru yang dipilih ke dialog.
         dialog.setDataGuru(
                 nipDipilih,
                 namaDipilih,
@@ -416,40 +423,53 @@ private String hpDipilih;
                 tglDipilih,
                 alamatDipilih,
                 hpDipilih);
-        
-        dialog.setLocationRelativeTo(this);
-        dialog.setVisible(true);
+
+        dialog.setLocationRelativeTo(this); // Menampilkan dialog di tengah panel.
+        dialog.setVisible(true); // Menampilkan dialog.
     }//GEN-LAST:event_BtnUbahActionPerformed
 
     private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnHapusActionPerformed
         // TODO add your handling code here:  
-        if (nipDipilih.isEmpty()){
+        // Memastikan data guru telah dipilih.
+        if (nipDipilih.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Pilih data yang akan dihapus");
             return;
         }
 
-        int konfirmasi = JOptionPane.showConfirmDialog(this,
+        // Menampilkan konfirmasi penghapusan data.
+        int konfirmasi = JOptionPane.showConfirmDialog(
+                this,
                 "Yakin ingin menghapus data ini?",
                 "Konfirmasi",
                 JOptionPane.YES_NO_OPTION);
-        
-        if (konfirmasi == JOptionPane.YES_OPTION){
+
+        if (konfirmasi == JOptionPane.YES_OPTION) {
+
             try {
+
+                // Query untuk menghapus data guru berdasarkan NIP.
                 String sql = "DELETE FROM guru WHERE nip=?";
-                Connection conn = Koneksi.konek();
-                PreparedStatement ps = conn.prepareStatement(sql);
-                ps.setString(1, nipDipilih);
-                
-                int hasil = ps.executeUpdate();
-                
+
+                Connection conn = Koneksi.konek(); // Membuka koneksi database.
+                PreparedStatement ps = conn.prepareStatement(sql); // Menyiapkan query.
+                ps.setString(1, nipDipilih); // Mengisi parameter NIP.
+
+                int hasil = ps.executeUpdate(); // Menjalankan query hapus.
+
                 if (hasil > 0) {
+
                     JOptionPane.showMessageDialog(this, "Data berhasil dihapus");
-                    load_tabel_guru();
+
+                    load_tabel_guru(); // Memperbarui data pada tabel.
+
                 }
+
             } catch (SQLException e) {
-                e.printStackTrace();
+
+                e.printStackTrace(); // Menampilkan error pada console.
                 JOptionPane.showMessageDialog(this, e.getMessage());
-            } 
+
+            }
         }
     }//GEN-LAST:event_BtnHapusActionPerformed
 

@@ -6,14 +6,17 @@ package appabsensismpihidayatuttholibin.view;
 
 import appabsensismpihidayatuttholibin.Config.Koneksi;
 import appabsensismpihidayatuttholibin.view.mainPanel.panelDashboard;
+
 import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.ui.FlatLineBorder;
 import java.awt.Color;
 import java.awt.Insets;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
@@ -25,6 +28,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class formLogin extends javax.swing.JFrame {
 
+    // Membuat objek panel Dashboard yang akan digunakan setelah proses login berhasil.
     private panelDashboard ds = new panelDashboard();
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(formLogin.class.getName());
@@ -35,15 +39,17 @@ public class formLogin extends javax.swing.JFrame {
     public formLogin() {
         initComponents();
 
+        // Memberikan border melengkung pada panel password dengan warna putih.
         borderLengkung(pnlpassword, "#FFFFFF");
     }
 
     void borderLengkung(JPanel panel, String hexColor) {
+
         panel.setBorder(new FlatLineBorder(
-                new Insets(0, 0, 0, 0),
-                Color.decode(hexColor),
-                1f,
-                20
+                new Insets(0, 0, 0, 0), // Mengatur jarak border dari sisi panel.
+                Color.decode(hexColor), // Mengubah kode warna hexadecimal menjadi objek Color.
+                1f, // Menentukan ketebalan border.
+                20 // Menentukan radius sudut agar border terlihat melengkung.
         ));
     }
 
@@ -247,81 +253,63 @@ public class formLogin extends javax.swing.JFrame {
 
     private void bLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bLoginActionPerformed
         // TODO add your handling code here:
-        //Ambil teks yang dimasukkan user pada field username
-        String username = tUsername.getText();
+        String username = tUsername.getText();      // Mengambil input username
+        String password = tPassword.getText();      // Mengambil input password
 
-        //Ambil teks yang dimasukkan user pada field password
-        String password = tPassword.getText();
-
-        //periksa apakah username dan password tidak kosong
-        if (username.length() != 0 && password.length() != 0) {
+        if (username.length() != 0 && password.length() != 0) {   // Memastikan input tidak kosong
             try {
-                //Query SQL untuk mencari user dengan username dan password (dihash dengan MDS)
-                String sql = "SELECT * FROM pengguna WHERE nama_pengguna=? AND password=(?)";
 
-                //Buat koneksi ke database
-                Connection con = Koneksi.konek();
+                String sql = "SELECT * FROM pengguna WHERE nama_pengguna=? AND password=(?)"; // Query login
 
-                //siapkan statement SQL dengan parameter
-                PreparedStatement ps = con.prepareStatement(sql);
+                Connection con = Koneksi.konek();              // Membuka koneksi database
+                PreparedStatement ps = con.prepareStatement(sql); // Menyiapkan query
 
-                //isi parameter pertama (?) dengan username
-                ps.setString(1, username);
+                ps.setString(1, username); // Mengisi parameter username
+                ps.setString(2, password); // Mengisi parameter password
 
-                //isi parameter kedua (?) dengan password yang akan dihash MD5 di sisi database
-                ps.setString(2, password);
+                ResultSet rs = ps.executeQuery(); // Menjalankan query
 
-                //jalankan query dan ambil hasilnya
-                ResultSet rs = ps.executeQuery();
+                if (rs.next()) { // Jika data ditemukan (login berhasil)
 
-                //jika hasil query memiliki baris (berarti login berhasil)
-                if (rs.next()) {
-                    //role
-                    String nama = rs.getString("nama_pengguna");
-                    String email = rs.getString("email");
-                    String role = rs.getString("role");
+                    String nama = rs.getString("nama_pengguna"); // Mengambil nama pengguna
+                    String email = rs.getString("email");         // Mengambil email
+                    String role = rs.getString("role");           // Mengambil role pengguna
 
-                    if (role.equalsIgnoreCase("Admin")) {
+                    if (role.equalsIgnoreCase("Admin")) { // Jika role Admin
 
-                        mainForm admin = new mainForm();
-                        admin.setDataUser(nama, email, role);
-                        admin.setVisible(true);
+                        mainForm admin = new mainForm();          // Membuka form Admin
+                        admin.setDataUser(nama, email, role);     // Mengirim data pengguna
+                        admin.setVisible(true);                   // Menampilkan form
 
-                    } else if (role.equalsIgnoreCase("Guru")) {
+                    } else if (role.equalsIgnoreCase("Guru")) { // Jika role Guru
 
-                        mainFormguru guru = new mainFormguru();
-                        guru.setDataUserGuru(nama, email, role);
-                        guru.setVisible(true);
+                        mainFormguru guru = new mainFormguru();       // Membuka form Guru
+                        guru.setDataUserGuru(nama, email, role);      // Mengirim data pengguna
+                        guru.setVisible(true);                        // Menampilkan form
 
                     } else {
-
-                        JOptionPane.showMessageDialog(null, "Role tidak dikenali.");
+                        JOptionPane.showMessageDialog(null, "Role tidak dikenali."); // Role tidak valid
                         return;
-
                     }
-
-                    this.dispose();
-
+                    this.dispose(); // Menutup form login
                 } else {
-                    //jika data tidak ditemukan, tampilkan pesan error
-                    JOptionPane.showMessageDialog(null, "Username/password salah");
+                    JOptionPane.showMessageDialog(null, "Username/password salah"); // Login gagal
                 }
             } catch (SQLException sQLException) {
-                //jika terjadi kesalahan SQL, tampilkan pesan error
-                JOptionPane.showMessageDialog(null, sQLException.getMessage());
+                JOptionPane.showMessageDialog(null, sQLException.getMessage()); // Menampilkan error SQL
             }
         } else {
-            //jika usename atau password kosong, beri peringatan ke user
-            JOptionPane.showMessageDialog(null, "Username/password tidak boleh kosong");
+            JOptionPane.showMessageDialog(null, "Username/password tidak boleh kosong"); // Input kosong
         }
     }//GEN-LAST:event_bLoginActionPerformed
 
     //Memberi fokus gained agar tulisan di text field kosong saat di klik
     private void tUsernameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tUsernameFocusGained
         // TODO add your handling code here:
-        String Username = tUsername.getText();
-        if (Username.equals("Masukkan Username")) {
-            tUsername.setText("");
+        String Username = tUsername.getText(); // Mengambil isi text field
+
+        if (Username.equals("Masukkan Username")) { // Jika masih placeholder
+            tUsername.setText(""); // Kosongkan text field
         }
     }//GEN-LAST:event_tUsernameFocusGained
 
@@ -329,47 +317,50 @@ public class formLogin extends javax.swing.JFrame {
     //dan kembali lagi jika tidak jadi dinputkan
     private void tUsernameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tUsernameFocusLost
         // TODO add your handling code here:
-        String Username = tUsername.getText();
-        if (Username.equals("") || Username.equals("Masukkan Username")) {
-            tUsername.setText("Masukkan Username");
+        String Username = tUsername.getText(); // Mengambil isi text field
+
+        if (Username.equals("") || Username.equals("Masukkan Username")) { // Jika kosong
+            tUsername.setText("Masukkan Username"); // Tampilkan placeholder
         }
     }//GEN-LAST:event_tUsernameFocusLost
 
     private void tPasswordFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tPasswordFocusGained
         // TODO add your handling code here:
-        String password = tPassword.getText();
-        if (password.equals("Masukkan Password")) {
-            tPassword.setText("");
+        String password = tPassword.getText(); // Mengambil isi password field
+
+        if (password.equals("Masukkan Password")) { // Jika masih placeholder
+            tPassword.setText(""); // Kosongkan password field
         }
     }//GEN-LAST:event_tPasswordFocusGained
 
     private void btnMataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMataActionPerformed
         // TODO add your handling code here:
-        if (btnMata.isSelected()) {
-            //password terlihat
-            tPassword.setEchoChar((char) 0);
+        if (btnMata.isSelected()) { // Jika tombol mata aktif
+            tPassword.setEchoChar((char) 0); // Password ditampilkan
         } else {
-            //password disembunyikan
-            tPassword.setEchoChar('.');
+            tPassword.setEchoChar('.'); // Password disembunyikan
         }
     }//GEN-LAST:event_btnMataActionPerformed
 
+    //Memberi fokus lost agar tulisan di text field kosong saat di klik
+    //dan kembali lagi jika tidak jadi dinputkan
     private void tPasswordFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tPasswordFocusLost
         // TODO add your handling code here:
-        String password = tPassword.getText();
-        if (password.equals("") || password.equals("Masukkan Password")) {
-            tPassword.setText("Masukkan Password");
+        String password = tPassword.getText(); // Mengambil isi password field
+
+        if (password.equals("") || password.equals("Masukkan Password")) { // Jika kosong
+            tPassword.setText("Masukkan Password"); // Tampilkan placeholder
         }
     }//GEN-LAST:event_tPasswordFocusLost
 
     private void tUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tUsernameActionPerformed
         // TODO add your handling code here:
-        tPassword.requestFocus();
+        tPassword.requestFocus(); // Fokus ke password field
     }//GEN-LAST:event_tUsernameActionPerformed
 
     private void tPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tPasswordActionPerformed
         // TODO add your handling code here:
-        bLogin.doClick();
+        bLogin.doClick(); // Menjalankan aksi tombol Login
     }//GEN-LAST:event_tPasswordActionPerformed
 
     /**

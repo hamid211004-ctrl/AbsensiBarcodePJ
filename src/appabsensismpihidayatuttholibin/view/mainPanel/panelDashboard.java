@@ -12,23 +12,27 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-
 import java.awt.HeadlessException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+
+// Mengimpor library JFreeChart.
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -48,6 +52,9 @@ public class panelDashboard extends javax.swing.JPanel {
     public panelDashboard() {
         initComponents();
         customTable();
+        customTable(); // Mengatur tampilan tabel.
+
+        // Memberikan border melengkung pada setiap panel informasi.
         borderLengkung(panelHadir, "#275167");
         borderLengkung(panelIzin, "#FFF024");
         borderLengkung(panelSakit, "#65D269");
@@ -56,21 +63,22 @@ public class panelDashboard extends javax.swing.JPanel {
         borderLengkung(panelKelas, "#275167");
         borderLengkung(panelSiswa, "#275167");
 
-        refreshDashboard();
+        refreshDashboard(); // Memuat seluruh data dashboard.
     }
 
+    // Memperbarui seluruh informasi pada dashboard.
     public void refreshDashboard() {
-        load_tabel_dashboard();
-        loadDashboard();
-        tampilGrafik();
+        load_tabel_dashboard(); // Memuat data absensi ke tabel.
+        loadDashboard();        // Memuat jumlah data pada kartu statistik.
+        tampilGrafik();         // Memuat grafik absensi.
     }
 
     //custom untuk header tabel
     private void customTable() {
-        tblDashboard.setRowHeight(40);
+        tblDashboard.setRowHeight(40);// Mengatur tinggi baris.
 
         JTableHeader header = tblDashboard.getTableHeader();
-        header.setPreferredSize(new Dimension(100, 40));
+        header.setPreferredSize(new Dimension(100, 40));// Mengatur tinggi header.
 
         header.setDefaultRenderer(new DefaultTableCellRenderer() {
             @Override
@@ -92,12 +100,14 @@ public class panelDashboard extends javax.swing.JPanel {
         });
     }
 
+    // Memberikan border dengan sudut melengkung pada panel.
     void borderLengkung(JPanel panel, String hexColor) {
+
         panel.setBorder(new FlatLineBorder(
-                new Insets(0, 0, 0, 0),
-                Color.decode(hexColor),
-                1f,
-                15
+                new Insets(0, 0, 0, 0), // Margin border.
+                Color.decode(hexColor), // Warna border.
+                1f, // Ketebalan border.
+                15 // Radius sudut.
         ));
     }
 
@@ -174,7 +184,7 @@ public class panelDashboard extends javax.swing.JPanel {
                 lblHadir.setText(rs.getString("jumlah"));
             }
 
-            // Izin
+            // sakit
             rs = st.executeQuery("SELECT COUNT(*) AS jumlah "
                     + "FROM absensi "
                     + "WHERE status='Izin' "
@@ -183,7 +193,7 @@ public class panelDashboard extends javax.swing.JPanel {
                 lblSakit.setText(rs.getString("jumlah"));
             }
 
-            // Sakit
+            // izin
             rs = st.executeQuery("SELECT COUNT(*) AS jumlah "
                     + "FROM absensi "
                     + "WHERE status='Sakit' "
@@ -224,15 +234,19 @@ public class panelDashboard extends javax.swing.JPanel {
         }
     }
 
+    // Method untuk menampilkan grafik rekap absensi bulanan.
     public void tampilGrafik() {
 
+        // Membuat dataset yang akan digunakan sebagai sumber data grafik.
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
         try {
 
-            Connection conn = Koneksi.konek();
-            Statement st = conn.createStatement();
+            Connection conn = Koneksi.konek(); // Membuka koneksi ke database.
+            Statement st = conn.createStatement(); // Membuat statement SQL.
 
+            // Query untuk mengambil jumlah absensi berdasarkan bulan dan status
+            // dalam satu tahun ajaran.
             String sql = "SELECT MONTH(tanggal) AS bulan, status, COUNT(*) AS jumlah "
                     + "FROM absensi "
                     + "WHERE tanggal BETWEEN '2026-07-01' AND '2027-06-30' "
@@ -252,16 +266,18 @@ public class panelDashboard extends javax.swing.JPanel {
                     + "    WHEN 5 THEN 11 "
                     + "    WHEN 6 THEN 12 END;";
 
-            ResultSet rs = st.executeQuery(sql);
+            ResultSet rs = st.executeQuery(sql); // Menjalankan query.
 
+            // Mengambil setiap data hasil query.
             while (rs.next()) {
 
-                int bulan = rs.getInt("bulan");
-                String status = rs.getString("status");
-                int jumlah = rs.getInt("jumlah");
+                int bulan = rs.getInt("bulan"); // Mengambil nomor bulan.
+                String status = rs.getString("status"); // Mengambil status absensi.
+                int jumlah = rs.getInt("jumlah"); // Mengambil jumlah absensi.
 
-                String namaBulan = "";
+                String namaBulan = ""; // Menyimpan nama bulan.
 
+                // Mengubah nomor bulan menjadi nama bulan.
                 switch (bulan) {
                     case 7:
                         namaBulan = "Juli";
@@ -301,41 +317,44 @@ public class panelDashboard extends javax.swing.JPanel {
                         break;
                 }
 
+                // Menambahkan data ke dataset grafik.
                 dataset.addValue(jumlah, status, namaBulan);
 
             }
 
+            // Membuat grafik batang berdasarkan dataset.
             JFreeChart chart = ChartFactory.createBarChart(
-                    "Rekap Kehadiran Bulanan",
-                    "",
-                    "Jumlah",
+                    "Rekap Kehadiran Bulanan", // Judul grafik.
+                    "", // Label sumbu X.
+                    "Jumlah", // Label sumbu Y.
                     dataset
             );
 
-            // Mengatur tampilan grafik
+            // Mengatur tampilan grafik.
             CategoryPlot plot = chart.getCategoryPlot();
-            plot.setBackgroundPaint(Color.WHITE);
-            plot.setRangeGridlinePaint(Color.LIGHT_GRAY);
+            plot.setBackgroundPaint(Color.WHITE); // Warna latar grafik.
+            plot.setRangeGridlinePaint(Color.LIGHT_GRAY); // Warna garis bantu.
 
-            // Warna batang
+            // Mengatur warna setiap batang grafik.
             BarRenderer renderer = (BarRenderer) plot.getRenderer();
 
-            renderer.setSeriesPaint(0, new Color(35, 55, 75));      // Hadir
-            renderer.setSeriesPaint(1, new Color(0, 170, 140));     // Izin
-            renderer.setSeriesPaint(2, new Color(255, 205, 60));    // Sakit
-            renderer.setSeriesPaint(3, new Color(255, 0, 0));     // Alpa
+            renderer.setSeriesPaint(0, new Color(35, 55, 75));    // Hadir.
+            renderer.setSeriesPaint(1, new Color(0, 170, 140));   // Izin.
+            renderer.setSeriesPaint(2, new Color(255, 205, 60));  // Sakit.
+            renderer.setSeriesPaint(3, new Color(255, 0, 0));     // Alpa.
 
-            // Menampilkan grafik
+            // Menampilkan grafik pada panel.
             ChartPanel cp = new ChartPanel(chart);
 
-            panelGrafik.removeAll();
-            panelGrafik.setLayout(new BorderLayout());
-            panelGrafik.add(cp, BorderLayout.CENTER);
-            panelGrafik.revalidate();
-            panelGrafik.repaint();
+            panelGrafik.removeAll(); // Menghapus grafik sebelumnya.
+            panelGrafik.setLayout(new BorderLayout()); // Mengatur layout panel.
+            panelGrafik.add(cp, BorderLayout.CENTER); // Menambahkan grafik ke panel.
+            panelGrafik.revalidate(); // Memperbarui layout panel.
+            panelGrafik.repaint(); // Menggambar ulang panel.
 
         } catch (Exception e) {
 
+            // Menampilkan pesan jika terjadi kesalahan.
             JOptionPane.showMessageDialog(null, e);
 
         }

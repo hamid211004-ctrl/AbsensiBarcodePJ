@@ -27,6 +27,7 @@ public class dialogPengguna extends javax.swing.JDialog {
     public dialogPengguna(java.awt.Frame parent, boolean modal) {
         super(parent, false);
         initComponents();
+        // Menutup dialog secara otomatis ketika kehilangan fokus.
         addWindowFocusListener(new WindowAdapter() {
             @Override
             public void windowLostFocus(WindowEvent e) {
@@ -34,22 +35,27 @@ public class dialogPengguna extends javax.swing.JDialog {
             }
         });
 
+        // Memberikan border melengkung pada panel utama.
         borderLengkung(panelPengguna, "#000000");
     }
 
+    // Method untuk membuat border panel menjadi melengkung.
     void borderLengkung(JPanel panel, String hexColor) {
+
         panel.setBorder(new FlatLineBorder(
-                new Insets(0, 0, 0, 0),
-                Color.decode(hexColor),
-                1f,
-                20
+                new Insets(0, 0, 0, 0), // Mengatur jarak border.
+                Color.decode(hexColor), // Mengatur warna border.
+                1f, // Ketebalan border.
+                20 // Radius sudut border.
         ));
     }
 
+    // Menampilkan data pengguna yang sedang login pada dialog.
     public void setPengguna(String nama, String email, String role) {
-        lUsername.setText(nama);
-        lEmail.setText(email);
-        lRole.setText(role);
+
+        lUsername.setText(nama); // Menampilkan nama pengguna.
+        lEmail.setText(email);   // Menampilkan email pengguna.
+        lRole.setText(role);     // Menampilkan role pengguna.
     }
 
     /**
@@ -171,6 +177,7 @@ public class dialogPengguna extends javax.swing.JDialog {
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
         // TODO add your handling code here:
+        // Menampilkan dialog konfirmasi logout.
         int pilihan = JOptionPane.showConfirmDialog(
                 null,
                 "Apakah anda yakin ingin keluar",
@@ -178,13 +185,17 @@ public class dialogPengguna extends javax.swing.JDialog {
                 JOptionPane.YES_NO_OPTION);
 
         switch (pilihan) {
-            case JOptionPane.YES_OPTION:
-                dispose();
-                new formLogin().setVisible(true);
+
+            case JOptionPane.YES_OPTION: // Jika pengguna memilih Ya
+
+                dispose(); // Menutup dialog pengguna.
+                new formLogin().setVisible(true); // Menampilkan kembali form Login.
                 break;
-            case JOptionPane.NO_OPTION:
+
+            case JOptionPane.NO_OPTION: // Jika pengguna memilih Tidak
                 break;
-            default:
+
+            default: // Jika dialog ditutup tanpa memilih
                 break;
         }
     }//GEN-LAST:event_btnHapusActionPerformed

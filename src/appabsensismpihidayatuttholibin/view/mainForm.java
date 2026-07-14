@@ -4,10 +4,19 @@
  */
 package appabsensismpihidayatuttholibin.view;
 
+// Mengimpor dialog profil pengguna.
 import appabsensismpihidayatuttholibin.view.componen.dialogPengguna;
+
+// Mengimpor tema FlatLaf berwarna terang.
 import com.formdev.flatlaf.FlatLightLaf;
+
+// Mengimpor UIManager untuk mengatur Look and Feel aplikasi.
 import javax.swing.UIManager;
+
+// Mengimpor exception jika Look and Feel tidak didukung.
 import javax.swing.UnsupportedLookAndFeelException;
+
+// Mengimpor panel-panel utama aplikasi.
 import appabsensismpihidayatuttholibin.view.mainPanel.panelDashboard;
 import appabsensismpihidayatuttholibin.view.mainPanel.panelGuru;
 import appabsensismpihidayatuttholibin.view.mainPanel.panelKelas;
@@ -18,8 +27,14 @@ import appabsensismpihidayatuttholibin.view.mainPanel.panelPergantianGuru;
 import appabsensismpihidayatuttholibin.view.mainPanel.panelAbsensiQR;
 import appabsensismpihidayatuttholibin.view.mainPanel.panelAbsensiManual;
 import appabsensismpihidayatuttholibin.view.mainPanel.panelLaporan;
+
+// Mengimpor CardLayout untuk perpindahan antar panel.
 import java.awt.CardLayout;
+
+// Mengimpor kelas Color untuk pengaturan warna komponen.
 import java.awt.Color;
+
+// Mengimpor Point untuk menangani koordinat posisi komponen.
 import java.awt.Point;
 
 /**
@@ -28,65 +43,73 @@ import java.awt.Point;
  */
 public class mainForm extends javax.swing.JFrame {
 
+    // Menyimpan data pengguna yang sedang login.
     private String nama;
     private String email;
     private String role;
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(mainForm.class.getName());
+    // Objek CardLayout untuk mengatur perpindahan panel.
     private CardLayout cardLayout;
 
     /**
      * Creates new form mainForm
      */
     public mainForm() {
-        initComponents();
-
-        //memanggil method panel 
-        inisiasiPanel();
-
-        //memanggil method untuk tanggal dan jam
-        tanggaljam();
+        initComponents(); // Menginisialisasi seluruh komponen GUI.
+        inisiasiPanel(); // Memuat seluruh panel ke CardLayout.
+        tanggaljam();    // Menjalankan tampilan tanggal dan jam.
     }
 
-    // method untuk memanggil main panel menggunakan cardlayout
+    // Menginisialisasi seluruh panel yang digunakan pada CardLayout.
     void inisiasiPanel() {
-        cardLayout = (CardLayout) panelPerpindahan.getLayout();
 
-        panelPerpindahan.add(new panelDashboard(), "dashboard");
-        panelPerpindahan.add(new panelGuru(), "guru");
-        panelPerpindahan.add(new panelKelas(), "kelas");
-        panelPerpindahan.add(new panelSiswa(), "siswa");
-        panelPerpindahan.add(new panelGenerateQR(), "generate");
-        panelPerpindahan.add(new panelPengguna(), "pengguna");
-        panelPerpindahan.add(new panelPergantianGuru(), "PG");
-        panelPerpindahan.add(new panelAbsensiQR(), "QR");
-        panelPerpindahan.add(new panelAbsensiManual(), "manual");
-        panelPerpindahan.add(new panelLaporan(), "laporan");
+        cardLayout = (CardLayout) panelPerpindahan.getLayout(); // Mengambil layout panel.
+
+        panelPerpindahan.add(new panelDashboard(), "dashboard"); // Menambahkan panel Dashboard.
+        panelPerpindahan.add(new panelGuru(), "guru");           // Menambahkan panel Guru.
+        panelPerpindahan.add(new panelKelas(), "kelas");         // Menambahkan panel Kelas.
+        panelPerpindahan.add(new panelSiswa(), "siswa");         // Menambahkan panel Siswa.
+        panelPerpindahan.add(new panelGenerateQR(), "generate"); // Menambahkan panel Generate QR.
+        panelPerpindahan.add(new panelPengguna(), "pengguna");   // Menambahkan panel Pengguna.
+        panelPerpindahan.add(new panelPergantianGuru(), "PG");   // Menambahkan panel Pergantian Guru.
+        panelPerpindahan.add(new panelAbsensiQR(), "QR");        // Menambahkan panel Absensi QR.
+        panelPerpindahan.add(new panelAbsensiManual(), "manual");// Menambahkan panel Absensi Manual.
+        panelPerpindahan.add(new panelLaporan(), "laporan");     // Menambahkan panel Laporan.
     }
 
-    // method untuk menampilkan tanggal dan jam
+    // Menampilkan tanggal dan jam secara real-time.
     void tanggaljam() {
+
         javax.swing.Timer timer = new javax.swing.Timer(1000, (java.awt.event.ActionEvent e) -> {
+
+            // Mengatur format lokal Indonesia.
             java.util.Locale localeIndonesia = new java.util.Locale("id", "ID");
 
+            // Membuat format tampilan tanggal dan waktu.
             java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(
                     "EEEE, dd MMMM yyyy | HH.mm",
                     localeIndonesia
             );
 
+            // Mengambil waktu saat ini.
             String waktu = sdf.format(new java.util.Date());
+
+            // Menampilkan waktu pada JLabel.
             lTanggalJam.setText(waktu);
         });
 
-        timer.start();
+        timer.start(); // Menjalankan timer.
     }
 
+    // Menerima data pengguna yang login dan menampilkannya pada form.
     public void setDataUser(String nama, String email, String role) {
-        this.nama = nama;
-        this.email = email;
-        this.role = role;
 
-        lUsername.setText(nama);
+        this.nama = nama;     // Menyimpan nama pengguna.
+        this.email = email;   // Menyimpan email pengguna.
+        this.role = role;     // Menyimpan role pengguna.
+
+        lUsername.setText(nama); // Menampilkan nama pada label.
     }
 
     /**
@@ -426,16 +449,18 @@ public class mainForm extends javax.swing.JFrame {
 
     private void bProfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bProfilActionPerformed
         // TODO add your handling code here:
+        // Membuat objek dialog profil pengguna dengan form utama sebagai parent.
         dialogPengguna menu = new dialogPengguna(this, true);
 
+        // Mengirim data pengguna yang sedang login ke dialog.
         menu.setPengguna(nama, email, role);
 
-        //menampilkan JDialog dibawah button setting
-        Point p = bProfil.getLocationOnScreen();
-        int x = p.x + bProfil.getWidth() - menu.getWidth();
-        int y = 5 + p.y + bProfil.getHeight();
-        menu.setLocation(x, y);
-        menu.setVisible(true);
+        // Menampilkan JDialog tepat di bawah tombol Profil.
+        Point p = bProfil.getLocationOnScreen();             // Mengambil posisi tombol Profil di layar.
+        int x = p.x + bProfil.getWidth() - menu.getWidth();  // Mengatur posisi horizontal dialog.
+        int y = 5 + p.y + bProfil.getHeight();               // Mengatur posisi vertikal dialog.
+        menu.setLocation(x, y);                              // Menetapkan posisi dialog.
+        menu.setVisible(true);                               // Menampilkan dialog.
     }//GEN-LAST:event_bProfilActionPerformed
 
     /**
