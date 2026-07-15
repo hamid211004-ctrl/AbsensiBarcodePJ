@@ -958,7 +958,8 @@ public class panelAbsensiQR extends javax.swing.JPanel {
         jTable1.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
         jTable1.setGridColor(new java.awt.Color(39, 81, 103));
         jTable1.setRowHeight(47);
-        jTable1.setSelectionBackground(new java.awt.Color(242, 242, 242));
+        jTable1.setSelectionBackground(new java.awt.Color(48, 116, 172));
+        jTable1.setSelectionForeground(new java.awt.Color(255, 255, 255));
         jTable1.setShowGrid(false);
         jTable1.setShowHorizontalLines(true);
         jScrollPane1.setViewportView(jTable1);

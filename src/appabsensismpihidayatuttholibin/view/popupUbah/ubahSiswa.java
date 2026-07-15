@@ -349,7 +349,6 @@ public class ubahSiswa extends javax.swing.JDialog {
         jPanel7.setBackground(new java.awt.Color(229, 234, 239));
 
         tIDSiswa.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tIDSiswa.setForeground(new java.awt.Color(114, 114, 114));
         tIDSiswa.setPreferredSize(new java.awt.Dimension(71, 35));
         tIDSiswa.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -361,7 +360,6 @@ public class ubahSiswa extends javax.swing.JDialog {
         });
 
         tNama.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tNama.setForeground(new java.awt.Color(114, 114, 114));
         tNama.setText("Nama Siswa");
         tNama.setPreferredSize(new java.awt.Dimension(71, 35));
         tNama.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -374,17 +372,14 @@ public class ubahSiswa extends javax.swing.JDialog {
         });
 
         cbJK.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        cbJK.setForeground(new java.awt.Color(114, 114, 114));
         cbJK.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Laki-Laki", "Perempuan" }));
         cbJK.setPreferredSize(new java.awt.Dimension(72, 35));
 
-        jTGL.setForeground(new java.awt.Color(114, 114, 114));
         jTGL.setDateFormatString("y MMM d");
         jTGL.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
         jTGL.setPreferredSize(new java.awt.Dimension(85, 35));
 
         tTelepon.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tTelepon.setForeground(new java.awt.Color(114, 114, 114));
         tTelepon.setText("No Telepon");
         tTelepon.setPreferredSize(new java.awt.Dimension(71, 35));
         tTelepon.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -397,7 +392,6 @@ public class ubahSiswa extends javax.swing.JDialog {
         });
 
         cbKelas.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        cbKelas.setForeground(new java.awt.Color(114, 114, 114));
         cbKelas.setPreferredSize(new java.awt.Dimension(72, 35));
 
         jScrollPane1.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
@@ -408,7 +402,6 @@ public class ubahSiswa extends javax.swing.JDialog {
         jScrollPane1.setViewportView(tAlamat);
 
         tNISN1.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tNISN1.setForeground(new java.awt.Color(114, 114, 114));
         tNISN1.setText("NISN");
         tNISN1.setPreferredSize(new java.awt.Dimension(71, 35));
         tNISN1.addFocusListener(new java.awt.event.FocusAdapter() {

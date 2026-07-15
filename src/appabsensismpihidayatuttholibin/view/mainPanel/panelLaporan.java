@@ -461,7 +461,8 @@ public class panelLaporan extends javax.swing.JPanel {
         tblLaporan.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
         tblLaporan.setGridColor(new java.awt.Color(39, 81, 103));
         tblLaporan.setRowHeight(47);
-        tblLaporan.setSelectionBackground(new java.awt.Color(242, 242, 242));
+        tblLaporan.setSelectionBackground(new java.awt.Color(48, 116, 172));
+        tblLaporan.setSelectionForeground(new java.awt.Color(255, 255, 255));
         tblLaporan.setShowGrid(false);
         tblLaporan.setShowHorizontalLines(true);
         jScrollPane1.setViewportView(tblLaporan);

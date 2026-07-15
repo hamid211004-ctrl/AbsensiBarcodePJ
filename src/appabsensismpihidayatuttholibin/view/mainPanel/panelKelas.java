@@ -328,7 +328,8 @@ private String waliKelasDipilih;
         tblKelas.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
         tblKelas.setGridColor(new java.awt.Color(39, 81, 103));
         tblKelas.setRowHeight(47);
-        tblKelas.setSelectionBackground(new java.awt.Color(242, 242, 242));
+        tblKelas.setSelectionBackground(new java.awt.Color(48, 116, 172));
+        tblKelas.setSelectionForeground(new java.awt.Color(255, 255, 255));
         tblKelas.setShowGrid(false);
         tblKelas.setShowHorizontalLines(true);
         tblKelas.addMouseListener(new java.awt.event.MouseAdapter() {

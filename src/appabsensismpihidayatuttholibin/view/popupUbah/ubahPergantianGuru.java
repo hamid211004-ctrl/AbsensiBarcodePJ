@@ -322,29 +322,23 @@ public class ubahPergantianGuru extends javax.swing.JDialog {
         jPanel7.setBackground(new java.awt.Color(229, 234, 239));
 
         tID.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tID.setForeground(new java.awt.Color(114, 114, 114));
         tID.setText("ID Pergantian");
         tID.setPreferredSize(new java.awt.Dimension(71, 35));
 
         cbNamaGuru.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        cbNamaGuru.setForeground(new java.awt.Color(114, 114, 114));
         cbNamaGuru.setPreferredSize(new java.awt.Dimension(72, 35));
 
-        jTGL.setForeground(new java.awt.Color(114, 114, 114));
         jTGL.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
         jTGL.setPreferredSize(new java.awt.Dimension(85, 35));
 
         tMapel.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tMapel.setForeground(new java.awt.Color(114, 114, 114));
         tMapel.setText("Mapel");
 
         tJamke.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tJamke.setForeground(new java.awt.Color(114, 114, 114));
         tJamke.setText("No Telepon");
         tJamke.setPreferredSize(new java.awt.Dimension(71, 35));
 
         cbGuruPengganti.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        cbGuruPengganti.setForeground(new java.awt.Color(114, 114, 114));
         cbGuruPengganti.setMinimumSize(new java.awt.Dimension(72, 35));
         cbGuruPengganti.setPreferredSize(new java.awt.Dimension(72, 35));
 

@@ -286,7 +286,6 @@ public class tambahKelas extends javax.swing.JDialog {
         jPanel7.setBackground(new java.awt.Color(229, 234, 239));
 
         tKode.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tKode.setForeground(new java.awt.Color(114, 114, 114));
         tKode.setText("ID Kelas");
         tKode.setPreferredSize(new java.awt.Dimension(71, 35));
         tKode.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -299,7 +298,6 @@ public class tambahKelas extends javax.swing.JDialog {
         });
 
         tNama.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tNama.setForeground(new java.awt.Color(114, 114, 114));
         tNama.setText("Nama Kelas");
         tNama.setPreferredSize(new java.awt.Dimension(71, 35));
         tNama.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -312,7 +310,6 @@ public class tambahKelas extends javax.swing.JDialog {
         });
 
         cWali.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        cWali.setForeground(new java.awt.Color(114, 114, 114));
         cWali.setPreferredSize(new java.awt.Dimension(72, 35));
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);

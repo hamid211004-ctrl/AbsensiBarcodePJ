@@ -1021,7 +1021,8 @@ public class panelDashboard extends javax.swing.JPanel {
         tblDashboard.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
         tblDashboard.setGridColor(new java.awt.Color(39, 81, 103));
         tblDashboard.setRowHeight(47);
-        tblDashboard.setSelectionBackground(new java.awt.Color(242, 242, 242));
+        tblDashboard.setSelectionBackground(new java.awt.Color(48, 116, 172));
+        tblDashboard.setSelectionForeground(new java.awt.Color(255, 255, 255));
         tblDashboard.setShowGrid(false);
         tblDashboard.setShowHorizontalLines(true);
         jScrollPane1.setViewportView(tblDashboard);

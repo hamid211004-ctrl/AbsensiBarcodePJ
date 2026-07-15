@@ -337,7 +337,8 @@ private String keteranganDipilih;
         tblPergantianGuru.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
         tblPergantianGuru.setGridColor(new java.awt.Color(39, 81, 103));
         tblPergantianGuru.setRowHeight(47);
-        tblPergantianGuru.setSelectionBackground(new java.awt.Color(242, 242, 242));
+        tblPergantianGuru.setSelectionBackground(new java.awt.Color(48, 116, 172));
+        tblPergantianGuru.setSelectionForeground(new java.awt.Color(255, 255, 255));
         tblPergantianGuru.setShowGrid(false);
         tblPergantianGuru.setShowHorizontalLines(true);
         tblPergantianGuru.addMouseListener(new java.awt.event.MouseAdapter() {

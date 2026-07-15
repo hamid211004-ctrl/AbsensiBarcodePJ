@@ -353,7 +353,8 @@ public class panelAbsensiManual extends javax.swing.JPanel {
         ));
         tblAbsensi.setGridColor(new java.awt.Color(39, 81, 103));
         tblAbsensi.setRowHeight(47);
-        tblAbsensi.setSelectionBackground(new java.awt.Color(242, 242, 242));
+        tblAbsensi.setSelectionBackground(new java.awt.Color(48, 116, 172));
+        tblAbsensi.setSelectionForeground(new java.awt.Color(255, 255, 255));
         tblAbsensi.setShowGrid(false);
         tblAbsensi.setShowHorizontalLines(true);
         tblAbsensi.addMouseListener(new java.awt.event.MouseAdapter() {

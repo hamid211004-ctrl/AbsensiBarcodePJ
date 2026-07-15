@@ -252,7 +252,6 @@ public class tambahGuru extends javax.swing.JDialog {
         );
 
         tID.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tID.setForeground(new java.awt.Color(114, 114, 114));
         tID.setPreferredSize(new java.awt.Dimension(71, 35));
         tID.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -265,7 +264,6 @@ public class tambahGuru extends javax.swing.JDialog {
         tID.addActionListener(this::tIDActionPerformed);
 
         tNama.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tNama.setForeground(new java.awt.Color(114, 114, 114));
         tNama.setText("Nama Guru");
         tNama.setPreferredSize(new java.awt.Dimension(71, 35));
         tNama.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -279,12 +277,10 @@ public class tambahGuru extends javax.swing.JDialog {
         tNama.addActionListener(this::tNamaActionPerformed);
 
         cbJK.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        cbJK.setForeground(new java.awt.Color(114, 114, 114));
         cbJK.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Laki-Laki", "Perempuan" }));
         cbJK.setPreferredSize(new java.awt.Dimension(72, 35));
         cbJK.addActionListener(this::cbJKActionPerformed);
 
-        tTanggal.setForeground(new java.awt.Color(114, 114, 114));
         tTanggal.setDateFormatString("y MMM d");
         tTanggal.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
         tTanggal.setPreferredSize(new java.awt.Dimension(85, 35));
@@ -297,7 +293,6 @@ public class tambahGuru extends javax.swing.JDialog {
         jScrollPane1.setViewportView(tAlamat);
 
         tTelepon.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tTelepon.setForeground(new java.awt.Color(114, 114, 114));
         tTelepon.setText("No Telepon");
         tTelepon.setPreferredSize(new java.awt.Dimension(71, 35));
         tTelepon.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -311,7 +306,6 @@ public class tambahGuru extends javax.swing.JDialog {
         tTelepon.addActionListener(this::tTeleponActionPerformed);
 
         tNIP1.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tNIP1.setForeground(new java.awt.Color(114, 114, 114));
         tNIP1.setText("NIP/NIY");
         tNIP1.setPreferredSize(new java.awt.Dimension(71, 35));
         tNIP1.addFocusListener(new java.awt.event.FocusAdapter() {

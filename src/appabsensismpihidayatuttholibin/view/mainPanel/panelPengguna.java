@@ -333,7 +333,8 @@ public class panelPengguna extends javax.swing.JPanel {
         tblPengguna.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
         tblPengguna.setGridColor(new java.awt.Color(39, 81, 103));
         tblPengguna.setRowHeight(47);
-        tblPengguna.setSelectionBackground(new java.awt.Color(242, 242, 242));
+        tblPengguna.setSelectionBackground(new java.awt.Color(48, 116, 172));
+        tblPengguna.setSelectionForeground(new java.awt.Color(255, 255, 255));
         tblPengguna.setShowGrid(false);
         tblPengguna.setShowHorizontalLines(true);
         tblPengguna.addMouseListener(new java.awt.event.MouseAdapter() {

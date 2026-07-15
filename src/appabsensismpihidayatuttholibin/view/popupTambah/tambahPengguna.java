@@ -281,7 +281,6 @@ public class tambahPengguna extends javax.swing.JDialog {
         jPanel7.setLayout(new java.awt.GridBagLayout());
 
         tPengguna.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tPengguna.setForeground(new java.awt.Color(114, 114, 114));
         tPengguna.setText("ID Pengguna");
         tPengguna.setPreferredSize(new java.awt.Dimension(71, 35));
         tPengguna.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -304,7 +303,6 @@ public class tambahPengguna extends javax.swing.JDialog {
         jPanel7.add(tPengguna, gridBagConstraints);
 
         tNama.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tNama.setForeground(new java.awt.Color(114, 114, 114));
         tNama.setText("Masukkan  Username");
         tNama.setPreferredSize(new java.awt.Dimension(71, 35));
         tNama.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -328,7 +326,6 @@ public class tambahPengguna extends javax.swing.JDialog {
         jPanel7.add(tNama, gridBagConstraints);
 
         tPassword.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tPassword.setForeground(new java.awt.Color(114, 114, 114));
         tPassword.setText("Masukkan Password");
         tPassword.setMinimumSize(new java.awt.Dimension(64, 35));
         tPassword.setPreferredSize(new java.awt.Dimension(64, 35));
@@ -351,7 +348,6 @@ public class tambahPengguna extends javax.swing.JDialog {
         jPanel7.add(tPassword, gridBagConstraints);
 
         tEmail.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tEmail.setForeground(new java.awt.Color(114, 114, 114));
         tEmail.setText("Masukkan Email");
         tEmail.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -373,7 +369,6 @@ public class tambahPengguna extends javax.swing.JDialog {
         jPanel7.add(tEmail, gridBagConstraints);
 
         cRole.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        cRole.setForeground(new java.awt.Color(114, 114, 114));
         cRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Admin", "Guru" }));
         cRole.setPreferredSize(new java.awt.Dimension(72, 35));
         gridBagConstraints = new java.awt.GridBagConstraints();

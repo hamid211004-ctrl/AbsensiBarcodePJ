@@ -268,7 +268,6 @@ public class ubahKelas extends javax.swing.JDialog {
         jPanel7.setLayout(new java.awt.GridBagLayout());
 
         tKode.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tKode.setForeground(new java.awt.Color(114, 114, 114));
         tKode.setText("ID Kelas");
         tKode.setPreferredSize(new java.awt.Dimension(71, 35));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -283,7 +282,6 @@ public class ubahKelas extends javax.swing.JDialog {
         jPanel7.add(tKode, gridBagConstraints);
 
         tNama.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tNama.setForeground(new java.awt.Color(114, 114, 114));
         tNama.setText("Nama Kelas");
         tNama.setPreferredSize(new java.awt.Dimension(71, 35));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -298,7 +296,6 @@ public class ubahKelas extends javax.swing.JDialog {
         jPanel7.add(tNama, gridBagConstraints);
 
         cWali.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        cWali.setForeground(new java.awt.Color(114, 114, 114));
         cWali.setPreferredSize(new java.awt.Dimension(72, 35));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;

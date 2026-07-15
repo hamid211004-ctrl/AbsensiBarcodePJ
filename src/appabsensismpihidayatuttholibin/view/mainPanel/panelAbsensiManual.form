@@ -419,7 +419,10 @@
                     </Property>
                     <Property name="rowHeight" type="int" value="47"/>
                     <Property name="selectionBackground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="f2" green="f2" red="f2" type="rgb"/>
+                      <Color blue="ac" green="74" red="30" type="rgb"/>
+                    </Property>
+                    <Property name="selectionForeground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="ff" green="ff" red="ff" type="rgb"/>
                     </Property>
                     <Property name="showGrid" type="boolean" value="false"/>
                     <Property name="showHorizontalLines" type="boolean" value="true"/>

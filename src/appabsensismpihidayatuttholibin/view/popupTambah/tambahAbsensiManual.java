@@ -328,7 +328,6 @@ public class tambahAbsensiManual extends javax.swing.JDialog {
         jPanel7.setBackground(new java.awt.Color(229, 234, 239));
 
         tID.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tID.setForeground(new java.awt.Color(114, 114, 114));
         tID.setText("ID Absensi");
         tID.setPreferredSize(new java.awt.Dimension(71, 35));
         tID.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -341,7 +340,6 @@ public class tambahAbsensiManual extends javax.swing.JDialog {
         });
 
         cbNama.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        cbNama.setForeground(new java.awt.Color(114, 114, 114));
         cbNama.setPreferredSize(new java.awt.Dimension(72, 35));
 
         jTGL.setDateFormatString("y MMM d");
@@ -349,12 +347,10 @@ public class tambahAbsensiManual extends javax.swing.JDialog {
         jTGL.setPreferredSize(new java.awt.Dimension(85, 35));
 
         cbStatus.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        cbStatus.setForeground(new java.awt.Color(114, 114, 114));
         cbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hadir", "Izin", "Sakit", "Alpa" }));
         cbStatus.setPreferredSize(new java.awt.Dimension(86, 35));
 
         tNISN.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tNISN.setForeground(new java.awt.Color(114, 114, 114));
         tNISN.setPreferredSize(new java.awt.Dimension(71, 35));
         tNISN.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -366,7 +362,6 @@ public class tambahAbsensiManual extends javax.swing.JDialog {
         });
 
         tKelas.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tKelas.setForeground(new java.awt.Color(114, 114, 114));
         tKelas.setPreferredSize(new java.awt.Dimension(71, 35));
         tKelas.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {

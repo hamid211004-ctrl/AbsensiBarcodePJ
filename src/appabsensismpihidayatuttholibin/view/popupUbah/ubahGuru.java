@@ -173,26 +173,21 @@ public class ubahGuru extends javax.swing.JDialog {
         jPanel7.setBackground(new java.awt.Color(229, 234, 239));
 
         tID.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tID.setForeground(new java.awt.Color(114, 114, 114));
         tID.setPreferredSize(new java.awt.Dimension(71, 35));
 
         tNama.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tNama.setForeground(new java.awt.Color(114, 114, 114));
         tNama.setText("Nama Guru");
         tNama.setPreferredSize(new java.awt.Dimension(71, 35));
 
         cJK.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        cJK.setForeground(new java.awt.Color(114, 114, 114));
         cJK.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Laki-Laki", "Perempuan" }));
         cJK.setPreferredSize(new java.awt.Dimension(72, 35));
 
-        tTanggal.setForeground(new java.awt.Color(114, 114, 114));
         tTanggal.setDateFormatString("y MMM d");
         tTanggal.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
         tTanggal.setPreferredSize(new java.awt.Dimension(85, 35));
 
         tHP.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tHP.setForeground(new java.awt.Color(114, 114, 114));
         tHP.setText("No Telepon");
         tHP.setPreferredSize(new java.awt.Dimension(71, 35));
 
@@ -202,7 +197,6 @@ public class ubahGuru extends javax.swing.JDialog {
         jScrollPane1.setViewportView(tAlamat);
 
         tNIP1.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tNIP1.setForeground(new java.awt.Color(114, 114, 114));
         tNIP1.setText("NIP/NIY");
         tNIP1.setPreferredSize(new java.awt.Dimension(71, 35));
 

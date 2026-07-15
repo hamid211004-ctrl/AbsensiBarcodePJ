@@ -258,27 +258,22 @@ public class ubahPengguna extends javax.swing.JDialog {
         jPanel7.setBackground(new java.awt.Color(229, 234, 239));
 
         tPengguna.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tPengguna.setForeground(new java.awt.Color(114, 114, 114));
         tPengguna.setText("ID Pengguna");
         tPengguna.setPreferredSize(new java.awt.Dimension(71, 35));
 
         tNama.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tNama.setForeground(new java.awt.Color(114, 114, 114));
         tNama.setText("Masukkan Nama Guru");
         tNama.setPreferredSize(new java.awt.Dimension(71, 35));
 
         tPassword.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tPassword.setForeground(new java.awt.Color(114, 114, 114));
         tPassword.setText("Masukkan Password");
         tPassword.setMinimumSize(new java.awt.Dimension(64, 35));
         tPassword.setPreferredSize(new java.awt.Dimension(64, 35));
 
         tEmail.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tEmail.setForeground(new java.awt.Color(114, 114, 114));
         tEmail.setText("Masukkan Email");
 
         cRole.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        cRole.setForeground(new java.awt.Color(114, 114, 114));
         cRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Admin", "Guru" }));
         cRole.setPreferredSize(new java.awt.Dimension(72, 35));
 

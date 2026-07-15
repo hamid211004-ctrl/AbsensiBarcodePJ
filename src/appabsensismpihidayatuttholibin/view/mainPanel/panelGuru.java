@@ -355,7 +355,8 @@ public class panelGuru extends javax.swing.JPanel {
         tblGuru.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
         tblGuru.setGridColor(new java.awt.Color(39, 81, 103));
         tblGuru.setRowHeight(47);
-        tblGuru.setSelectionBackground(new java.awt.Color(242, 242, 242));
+        tblGuru.setSelectionBackground(new java.awt.Color(48, 116, 172));
+        tblGuru.setSelectionForeground(new java.awt.Color(255, 255, 255));
         tblGuru.setShowGrid(false);
         tblGuru.setShowHorizontalLines(true);
         tblGuru.addMouseListener(new java.awt.event.MouseAdapter() {
