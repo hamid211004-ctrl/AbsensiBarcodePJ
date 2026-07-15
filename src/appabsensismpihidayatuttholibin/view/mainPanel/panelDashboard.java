@@ -75,10 +75,10 @@ public class panelDashboard extends javax.swing.JPanel {
 
     //custom untuk header tabel
     private void customTable() {
-        tblDashboard.setRowHeight(40);// Mengatur tinggi baris.
+        tblDashboard.setRowHeight(45);// Mengatur tinggi baris.
 
         JTableHeader header = tblDashboard.getTableHeader();
-        header.setPreferredSize(new Dimension(100, 40));// Mengatur tinggi header.
+        header.setPreferredSize(new Dimension(100, 45));// Mengatur tinggi header.
 
         header.setDefaultRenderer(new DefaultTableCellRenderer() {
             @Override
@@ -127,9 +127,9 @@ public class panelDashboard extends javax.swing.JPanel {
         try {
             //Query SQL untuk mengambil semua data dari tabel guru
             String sql
-                    = "SELECT a.id_absensi, a.tanggal, a.jam_absensi, a.nisn, a.status, s.nama_siswa, k.nama_kelas "
+                    = "SELECT a.id_absensi, a.tanggal, a.jam_absensi, a.status, s.nisn, s.nama_siswa, k.nama_kelas "
                     + "FROM absensi a "
-                    + "JOIN siswa s ON a.nisn=s.nisn "
+                    + "JOIN siswa s ON a.id_siswa = s.id_siswa "
                     + "JOIN kelas k ON s.id_kelas=k.id_kelas "
                     + "WHERE a.tanggal = CURDATE() "
                     + "ORDER BY a.jam_absensi DESC;";

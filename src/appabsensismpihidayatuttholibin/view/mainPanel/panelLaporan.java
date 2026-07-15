@@ -61,10 +61,10 @@ public class panelLaporan extends javax.swing.JPanel {
 
     //custom untuk header tabel
     private void customTable() {
-        tblLaporan.setRowHeight(40);
+        tblLaporan.setRowHeight(45);
 
         JTableHeader header = tblLaporan.getTableHeader();
-        header.setPreferredSize(new Dimension(100, 40));
+        header.setPreferredSize(new Dimension(100, 45));
 
         header.setDefaultRenderer(new DefaultTableCellRenderer() {
             @Override
@@ -96,7 +96,7 @@ public class panelLaporan extends javax.swing.JPanel {
                     + "s.nisn,s.nama_siswa,k.nama_kelas,"
                     + "a.status,a.metode "
                     + "FROM absensi a "
-                    + "JOIN siswa s ON a.nisn = s.nisn "
+                    + "JOIN siswa s ON a.id_siswa = s.id_siswa "
                     + "JOIN kelas k ON s.id_kelas = k.id_kelas "
                     + "ORDER BY a.tanggal DESC";
 
@@ -201,9 +201,9 @@ public class panelLaporan extends javax.swing.JPanel {
 
         try {
             //Query SQL untuk mengambil semua data dari tabel guru
-            String sql = "SELECT a.id_absensi, a.tanggal, a.status, a.nisn, s.nama_siswa, k.nama_kelas "
+            String sql = "SELECT a.id_absensi, a.tanggal, a.status, s.nisn, s.nama_siswa, k.nama_kelas "
                     + "FROM absensi a "
-                    + "JOIN siswa s ON a.nisn = s.nisn "
+                    + "JOIN siswa s ON a.id_siswa = s.id_siswa "
                     + "LEFT JOIN kelas k ON s.id_kelas = k.id_kelas "
                     + "WHERE a.tanggal = CURDATE()";
 

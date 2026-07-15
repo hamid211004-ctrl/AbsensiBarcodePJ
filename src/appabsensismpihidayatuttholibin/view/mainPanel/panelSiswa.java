@@ -32,6 +32,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class panelSiswa extends javax.swing.JPanel {
 
+    private String idDipilih;
     private String nisnDipilih;
     private String namaSiswaDipilih;
     private String JKDipilih;
@@ -52,10 +53,10 @@ public class panelSiswa extends javax.swing.JPanel {
 
     //custom untuk header tabel
     private void customTable() {
-        tblSiswa.setRowHeight(40);
+        tblSiswa.setRowHeight(45);
 
         JTableHeader header = tblSiswa.getTableHeader();
-        header.setPreferredSize(new Dimension(100, 40));
+        header.setPreferredSize(new Dimension(100, 45));
 
         header.setDefaultRenderer(new DefaultTableCellRenderer() {
             @Override
@@ -92,6 +93,7 @@ public class panelSiswa extends javax.swing.JPanel {
         DefaultTableModel model = new DefaultTableModel();
 
         //menambahkan kolom ke dalam model table
+        model.addColumn("ID Siswa");
         model.addColumn("NIS");
         model.addColumn("Nama Siswa");
         model.addColumn("Jenis Kelamin");
@@ -102,7 +104,7 @@ public class panelSiswa extends javax.swing.JPanel {
 
         try {
             //Query SQL untuk mengambil data dari tabel siswa
-            String sql = "SELECT s.nisn, s.nama_siswa, s.jenis_kelamin, s.tgl_lahir, s.alamat, s.no_telepon, k.nama_kelas "
+            String sql = "SELECT s.id_siswa, s.nisn, s.nama_siswa, s.jenis_kelamin, s.tgl_lahir, s.alamat, s.no_telepon, k.nama_kelas "
                     + "FROM siswa s "
                     + "LEFT JOIN kelas k ON s.id_kelas = k.id_kelas";
 
@@ -117,6 +119,7 @@ public class panelSiswa extends javax.swing.JPanel {
             //melakukan iterasi untuk setiap baris data hasil query
             while (rs.next()) {
                 //mengambil nilai dari masing masing kolom
+                String ID = rs.getString("id_siswa");
                 String NIS = rs.getString("nisn");
                 String NamaSiswa = rs.getString("nama_siswa");
                 String JK = rs.getString("jenis_kelamin");
@@ -126,7 +129,7 @@ public class panelSiswa extends javax.swing.JPanel {
                 String namaKelas = rs.getString("nama_kelas");  //tambahann!!!
 
                 //menyusun data kedalam array objek
-                Object[] baris = {NIS, NamaSiswa, JK, tglLahir, alamat, NoTelp, namaKelas};
+                Object[] baris = {ID, NIS, NamaSiswa, JK, tglLahir, alamat, NoTelp, namaKelas};
 
                 //menambahkanarray baris ke dalam model tabel
                 model.addRow(baris);
@@ -378,14 +381,15 @@ public class panelSiswa extends javax.swing.JPanel {
         int barisYangDipilih = tblSiswa.rowAtPoint(evt.getPoint());
 
         //ambil nilai baris yang dipilih
-        nisnDipilih = tblSiswa.getValueAt(barisYangDipilih, 0).toString();
-        namaSiswaDipilih = tblSiswa.getValueAt(barisYangDipilih, 1).toString();
+        idDipilih = tblSiswa.getValueAt(barisYangDipilih, 0).toString();
+        nisnDipilih = tblSiswa.getValueAt(barisYangDipilih, 1).toString();
+        namaSiswaDipilih = tblSiswa.getValueAt(barisYangDipilih, 2).toString();
 
-        Object jkobj = tblSiswa.getValueAt(barisYangDipilih, 2);
-        Object tglobj = tblSiswa.getValueAt(barisYangDipilih, 3);
-        Object alamatobj = tblSiswa.getValueAt(barisYangDipilih, 4);
-        Object hpobj = tblSiswa.getValueAt(barisYangDipilih, 5);
-        Object kelasObj = tblSiswa.getValueAt(barisYangDipilih, 6);
+        Object jkobj = tblSiswa.getValueAt(barisYangDipilih, 3);
+        Object tglobj = tblSiswa.getValueAt(barisYangDipilih, 4);
+        Object alamatobj = tblSiswa.getValueAt(barisYangDipilih, 5);
+        Object hpobj = tblSiswa.getValueAt(barisYangDipilih, 6);
+        Object kelasObj = tblSiswa.getValueAt(barisYangDipilih, 7);
 
         IdKelasDipilih = (kelasObj != null) ? kelasObj.toString() : "";
         JKDipilih = (jkobj != null) ? jkobj.toString() : "";
@@ -396,7 +400,7 @@ public class panelSiswa extends javax.swing.JPanel {
 
     private void BtnUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnUbahActionPerformed
         // TODO add your handling code here:
-        if (nisnDipilih == null) {
+        if (idDipilih == null) {
             JOptionPane.showMessageDialog(this, "Silahkan pilih terlebih dahulu");
             return;
         }
@@ -407,6 +411,7 @@ public class panelSiswa extends javax.swing.JPanel {
         );
 
         dialog.setDataSiswa(
+                idDipilih, 
                 nisnDipilih,
                 namaSiswaDipilih,
                 JKDipilih,
@@ -421,7 +426,8 @@ public class panelSiswa extends javax.swing.JPanel {
 
     private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnHapusActionPerformed
         // TODO add your handling code here:
-        if (nisnDipilih == null) {
+        // Memastikan data siswa telah dipilih.
+        if (idDipilih == null) {
             JOptionPane.showMessageDialog(this,
                     "Silakan pilih data siswa terlebih dahulu.");
             return;
@@ -440,15 +446,15 @@ public class panelSiswa extends javax.swing.JPanel {
                 Connection conn = Koneksi.konek();
 
                 // Hapus data absensi siswa terlebih dahulu
-                String sqlAbsensi = "DELETE FROM absensi WHERE nisn=?";
+                String sqlAbsensi = "DELETE FROM absensi WHERE id_siswa=?";
                 PreparedStatement ps1 = conn.prepareStatement(sqlAbsensi);
-                ps1.setString(1, nisnDipilih);
+                ps1.setString(1, idDipilih);
                 ps1.executeUpdate();
 
                 // Hapus data siswa
-                String sqlSiswa = "DELETE FROM siswa WHERE nisn=?";
+                String sqlSiswa = "DELETE FROM siswa WHERE id_siswa=?";
                 PreparedStatement ps2 = conn.prepareStatement(sqlSiswa);
-                ps2.setString(1, nisnDipilih);
+                ps2.setString(1, idDipilih);
                 ps2.executeUpdate();
 
                 JOptionPane.showMessageDialog(this,
@@ -459,6 +465,7 @@ public class panelSiswa extends javax.swing.JPanel {
                 tblSiswa.clearSelection(); //Supaya setelah data dihapus, baris yang sebelumnya dipilih tidak tetap terlihat terseleksi di tabel.
 
                 // Reset variabel setelah berhasil dihapus
+                idDipilih = null;
                 nisnDipilih = null;
                 namaSiswaDipilih = null;
                 JKDipilih = null;

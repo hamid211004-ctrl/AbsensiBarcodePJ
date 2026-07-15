@@ -49,10 +49,10 @@ private String keteranganDipilih;
     
     //custom untuk header tabel
     private void customTable() {
-    tblPergantianGuru.setRowHeight(40);
+    tblPergantianGuru.setRowHeight(45);
 
     JTableHeader header = tblPergantianGuru.getTableHeader();
-    header.setPreferredSize(new Dimension(100, 40));
+    header.setPreferredSize(new Dimension(100, 45));
 
     header.setDefaultRenderer(new DefaultTableCellRenderer() {
         @Override
@@ -103,8 +103,8 @@ private String keteranganDipilih;
             //Query SQL untuk mengambil semua data dari tabel guru
             String sql = "SELECT p.*,g1.nama_guru AS nama_digantikan, g2.nama_guru AS nama_menggantikan "
                     + "FROM pergantian_guru p "
-                    + "LEFT JOIN guru g1 ON p.nip_digantikan = g1.nip "
-                    + "LEFT JOIN guru g2 ON p.nip_menggantikan = g2.nip";
+                    + "LEFT JOIN guru g1 ON p.id_digantikan = g1.id_guru "
+                    + "LEFT JOIN guru g2 ON p.id_menggantikan = g2.id_guru";
             //Membuka koneksi ke database
             Connection conn = Koneksi.konek();
             //membuat statement untuk menjalankan query

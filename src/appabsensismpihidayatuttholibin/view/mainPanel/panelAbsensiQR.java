@@ -48,35 +48,37 @@ import javax.swing.table.JTableHeader; //Mengimpor header tabel
  */
 public class panelAbsensiQR extends javax.swing.JPanel {
 
-            // Menyimpan daftar kamera yang terdeteksi pada komputer
-        private List<Webcam> daftarKamera;
+    // Menyimpan daftar kamera yang terdeteksi pada komputer
+    private List<Webcam> daftarKamera;
 
-        // Menyimpan kamera yang sedang digunakan
-        private Webcam webcam;
+    // Menyimpan kamera yang sedang digunakan
+    private Webcam webcam;
 
-        // Menampilkan hasil kamera ke dalam panel Swing
-        private WebcamPanel webcamPanel;
+    // Menampilkan hasil kamera ke dalam panel Swing
+    private WebcamPanel webcamPanel;
 
-        // Menjalankan proses scan QR pada thread terpisah
-        private ExecutorService executor;
+    // Menjalankan proses scan QR pada thread terpisah
+    private ExecutorService executor;
 
-        // Menandai apakah proses scanning sedang berjalan
-        private boolean scanning = false;
+    // Menandai apakah proses scanning sedang berjalan
+    private boolean scanning = false;
 
-        // Menyimpan QR terakhir yang berhasil dipindai
-        private String lastQRCode = "";
+    // Menyimpan QR terakhir yang berhasil dipindai
+    private String lastQRCode = "";
 
-        // Menyimpan waktu terakhir QR berhasil dipindai
-        private long lastScanTime = 0;
+    // Menyimpan waktu terakhir QR berhasil dipindai
+    private long lastScanTime = 0;
 
-        // Penanda agar tabel hanya direset sekali setiap hari
-        private boolean sudahResetHariIni = false;
+    // Penanda agar tabel hanya direset sekali setiap hari
+    private boolean sudahResetHariIni = false;
+
+    private String idSiswa;
 
     /**
      * Creates new form panelAbsensiQR
      */
     public panelAbsensiQR() {
-            // Memanggil seluruh komponen GUI yang dibuat otomatis oleh NetBeans
+        // Memanggil seluruh komponen GUI yang dibuat otomatis oleh NetBeans
         initComponents();
 
         // Memanggil method untuk mengubah tampilan header tabel agar lebih menarik
@@ -97,10 +99,10 @@ public class panelAbsensiQR extends javax.swing.JPanel {
 
     //custom untuk header tabel
     private void customTable() {
-        jTable1.setRowHeight(40);
+        jTable1.setRowHeight(45);
 
         JTableHeader header = jTable1.getTableHeader();
-        header.setPreferredSize(new Dimension(100, 40));
+        header.setPreferredSize(new Dimension(100, 45));
 
         header.setDefaultRenderer(new DefaultTableCellRenderer() {
             @Override
@@ -122,8 +124,8 @@ public class panelAbsensiQR extends javax.swing.JPanel {
         });
     }
 
-    public void load_table_absensi(){
-            // Membuat model tabel baru sebagai tempat menyimpan data yang akan ditampilkan
+    public void load_table_absensi() {
+        // Membuat model tabel baru sebagai tempat menyimpan data yang akan ditampilkan
         DefaultTableModel model = new DefaultTableModel();
 
         // Menambahkan kolom-kolom yang akan ditampilkan pada JTable
@@ -136,338 +138,352 @@ public class panelAbsensiQR extends javax.swing.JPanel {
         //model.addColumn("Metode"); // Kolom metode tidak ditampilkan
         model.addColumn("Status");
 
-        try{
+        try {
 
-        // Query untuk mengambil data absensi QR pada tanggal hari ini
-        String sql =
-            "SELECT a.id_absensi, a.tanggal, a.jam_absensi, a.status, a.nisn, s.nama_siswa, k.nama_kelas "+
-            "FROM absensi a " +
-            "JOIN siswa s ON a.nisn = s.nisn "+
-            "LEFT JOIN kelas k ON s.id_kelas = k.id_kelas "+
-            "WHERE a.tanggal = CURDATE() "+
-            "AND a.metode = 'QR code'";
-  
-      
-     // Membuka koneksi ke database
-        Connection conn = Koneksi.konek();
+            // Query untuk mengambil data absensi QR pada tanggal hari ini
+            String sql
+                    = "SELECT a.id_absensi, a.tanggal, a.jam_absensi, a.status, s.nisn, s.nama_siswa, k.nama_kelas "
+                    + "FROM absensi a "
+                    + "JOIN siswa s ON a.id_siswa = s.id_siswa "
+                    + "LEFT JOIN kelas k ON s.id_kelas = k.id_kelas "
+                    + "WHERE a.tanggal = CURDATE() "
+                    + "AND a.metode = 'QR code'";
 
-        // Membuat Statement untuk menjalankan query SQL
-        Statement st = conn.createStatement();
+            // Membuka koneksi ke database
+            Connection conn = Koneksi.konek();
 
-        // Menjalankan query dan menyimpan hasilnya ke ResultSet
-        ResultSet rs = st.executeQuery(sql);
+            // Membuat Statement untuk menjalankan query SQL
+            Statement st = conn.createStatement();
 
-        // Membaca seluruh data hasil query satu per satu
-        while(rs.next()){
+            // Menjalankan query dan menyimpan hasilnya ke ResultSet
+            ResultSet rs = st.executeQuery(sql);
 
-            // Mengambil nilai ID Absensi
-            String id = rs.getString("id_absensi");
+            // Membaca seluruh data hasil query satu per satu
+            while (rs.next()) {
 
-            // Mengambil tanggal absensi
-            String tanggal = rs.getString("tanggal");
+                // Mengambil nilai ID Absensi
+                String id = rs.getString("id_absensi");
 
-            // Mengambil jam absensi
-            String jam = rs.getString("jam_absensi");
+                // Mengambil tanggal absensi
+                String tanggal = rs.getString("tanggal");
 
-            // Mengambil NISN siswa
-            String nisn = rs.getString("nisn");
+                // Mengambil jam absensi
+                String jam = rs.getString("jam_absensi");
 
-            // Mengambil nama siswa
-            String nama = rs.getString("nama_siswa");
+                // Mengambil NISN siswa
+                String nisn = rs.getString("nisn");
 
-            // Mengambil nama kelas siswa
-            String namaKelas = rs.getString("nama_kelas");
+                // Mengambil nama siswa
+                String nama = rs.getString("nama_siswa");
 
-            //String metode = rs.getString("metode"); // Tidak digunakan
+                // Mengambil nama kelas siswa
+                String namaKelas = rs.getString("nama_kelas");
 
-            // Mengambil status kehadiran siswa
-            String status = rs.getString("status");
-         
-           
-          
-         // Menyusun seluruh data menjadi satu baris
-            Object[] baris = {
-                id,
-                tanggal,
-                jam,
-                nisn,
-                nama,
-                namaKelas,
-                status
-            };
+                //String metode = rs.getString("metode"); // Tidak digunakan
+                // Mengambil status kehadiran siswa
+                String status = rs.getString("status");
 
-            // Menambahkan baris data ke dalam model tabel
-            model.addRow(baris);
+                // Menyusun seluruh data menjadi satu baris
+                Object[] baris = {
+                    id,
+                    tanggal,
+                    jam,
+                    nisn,
+                    nama,
+                    namaKelas,
+                    status
+                };
+
+                // Menambahkan baris data ke dalam model tabel
+                model.addRow(baris);
+            }
+
+        } catch (Exception e) {
+
+            // Menampilkan detail error pada Output NetBeans jika terjadi kesalahan
+            e.printStackTrace();
         }
 
-    }catch(Exception e){
-
-        // Menampilkan detail error pada Output NetBeans jika terjadi kesalahan
-        e.printStackTrace();
+        // Menampilkan seluruh data dari model ke JTable
+        jTable1.setModel(model);
     }
 
-    // Menampilkan seluruh data dari model ke JTable
-    jTable1.setModel(model);
-}
-     
-     
-      // Method untuk memuat seluruh perangkat kamera yang tersedia
-private void loadKamera(){
+    // Method untuk memuat seluruh perangkat kamera yang tersedia
+    private void loadKamera() {
 
-    // Menghapus seluruh isi ComboBox agar tidak terjadi data ganda
-    jComboBox1.removeAllItems();
+        // Menghapus seluruh isi ComboBox agar tidak terjadi data ganda
+        jComboBox1.removeAllItems();
 
-    // Mengambil seluruh perangkat kamera yang terhubung ke komputer
-    daftarKamera = Webcam.getWebcams();
+        // Mengambil seluruh perangkat kamera yang terhubung ke komputer
+        daftarKamera = Webcam.getWebcams();
 
-    // Mengecek apakah tidak ada kamera yang terdeteksi
-    if (daftarKamera.isEmpty()){
+        // Mengecek apakah tidak ada kamera yang terdeteksi
+        if (daftarKamera.isEmpty()) {
 
-        // Menampilkan informasi bahwa tidak ada kamera
-        jComboBox1.addItem("Tidak ada kamera");
+            // Menampilkan informasi bahwa tidak ada kamera
+            jComboBox1.addItem("Tidak ada kamera");
 
-        // Menonaktifkan tombol Mulai karena kamera tidak tersedia
-        BtnMulai.setEnabled(false);
+            // Menonaktifkan tombol Mulai karena kamera tidak tersedia
+            BtnMulai.setEnabled(false);
 
-    }else {
+        } else {
 
-        // Melakukan perulangan pada setiap kamera yang berhasil dideteksi
-        for (Webcam cam : daftarKamera){
+            // Melakukan perulangan pada setiap kamera yang berhasil dideteksi
+            for (Webcam cam : daftarKamera) {
 
-            // Menambahkan nama setiap kamera ke dalam ComboBox
-            // Contoh: Integrated Camera, USB Camera, DroidCam, dll.
-            jComboBox1.addItem(cam.getName());
+                // Menambahkan nama setiap kamera ke dalam ComboBox
+                // Contoh: Integrated Camera, USB Camera, DroidCam, dll.
+                jComboBox1.addItem(cam.getName());
 
+            }
+
+            // Mengaktifkan tombol Mulai karena minimal terdapat satu kamera
+            BtnMulai.setEnabled(true);
         }
-
-        // Mengaktifkan tombol Mulai karena minimal terdapat satu kamera
-        BtnMulai.setEnabled(true);
     }
-}
 
-    
-     // Method untuk melakukan proses scan QR Code secara real-time
-private void scanQR(){
+    // Method untuk melakukan proses scan QR Code secara real-time
+    private void scanQR() {
 
-    // Menandai bahwa proses scanning sedang berjalan
-    scanning = true;
+        // Menandai bahwa proses scanning sedang berjalan
+        scanning = true;
 
-    // Membuat thread baru agar proses scan berjalan di background
-    // sehingga GUI tidak menjadi hang atau freeze
-    executor = Executors.newSingleThreadExecutor();
+        // Membuat thread baru agar proses scan berjalan di background
+        // sehingga GUI tidak menjadi hang atau freeze
+        executor = Executors.newSingleThreadExecutor();
 
-    // Menjalankan proses scanning pada thread yang telah dibuat
-    executor.execute(() ->{
+        // Menjalankan proses scanning pada thread yang telah dibuat
+        executor.execute(() -> {
 
-        // Melakukan scanning selama status scanning masih bernilai true
-        while (scanning) {
+            // Melakukan scanning selama status scanning masih bernilai true
+            while (scanning) {
 
-            try{
+                try {
 
-                // Menghentikan proses scan jika kamera belum ada
-                // atau kamera sudah ditutup
-                if(webcam == null || !webcam.isOpen()){
-                    break;
-                }
+                    // Menghentikan proses scan jika kamera belum ada
+                    // atau kamera sudah ditutup
+                    if (webcam == null || !webcam.isOpen()) {
+                        break;
+                    }
 
-                // Mengambil gambar (frame) terbaru dari kamera
-                BufferedImage image = webcam.getImage();
+                    // Mengambil gambar (frame) terbaru dari kamera
+                    BufferedImage image = webcam.getImage();
 
-                // Jika gambar belum berhasil diambil,
-                // kembali ke awal perulangan
-                if(image == null){
-                    continue;
-                }
-
-                // Mengubah gambar menjadi format yang dapat dibaca ZXing
-                LuminanceSource source =
-                        new BufferedImageLuminanceSource(image);
-                
-                 // Mengubah gambar menjadi BinaryBitmap
-                // agar QR Code dapat diproses
-                BinaryBitmap bitmap =
-                        new BinaryBitmap(
-                                new HybridBinarizer(source));
-
-                // Mencoba membaca QR Code pada gambar
-                Result result =
-                        new MultiFormatReader().decode(bitmap);
-
-                // Jika QR Code berhasil ditemukan
-                if(result != null){
-
-                    // Mengambil isi teks dari QR Code
-                    String isiQR = result.getText();
-
-                    // Mengambil waktu saat ini dalam satuan millisecond
-                    long sekarang = System.currentTimeMillis();
-
-                    // Mengecek apakah QR yang terbaca sama
-                    // dan dibaca kurang dari 3 detik
-                    if(isiQR.equals(lastQRCode)
-                            && (sekarang - lastScanTime) < 3000){
-
-                        // Jika sama, abaikan pembacaan
+                    // Jika gambar belum berhasil diambil,
+                    // kembali ke awal perulangan
+                    if (image == null) {
                         continue;
                     }
 
-                    // Menyimpan QR terakhir yang berhasil dibaca
-                    lastQRCode = isiQR;
+                    // Mengubah gambar menjadi format yang dapat dibaca ZXing
+                    LuminanceSource source
+                            = new BufferedImageLuminanceSource(image);
 
-                    // Menyimpan waktu pembacaan terakhir
-                    lastScanTime = sekarang;
+                    // Mengubah gambar menjadi BinaryBitmap
+                    // agar QR Code dapat diproses
+                    BinaryBitmap bitmap
+                            = new BinaryBitmap(
+                                    new HybridBinarizer(source));
 
-                    // Menjalankan proses simpan absensi
-                    // pada Event Dispatch Thread Swing
-                    javax.swing.SwingUtilities.invokeLater(() ->{
-                        simpanIdAbsensi(isiQR);
-                    });
-                          // Memberikan jeda 1,5 detik
-                    // agar QR tidak langsung terbaca kembali
-                    Thread.sleep(1500);
+                    // Mencoba membaca QR Code pada gambar
+                    Result result
+                            = new MultiFormatReader().decode(bitmap);
+
+                    // Jika QR Code berhasil ditemukan
+                    if (result != null) {
+
+                        // Mengambil isi teks dari QR Code
+                        String isiQR = result.getText();
+
+                        // Mengambil waktu saat ini dalam satuan millisecond
+                        long sekarang = System.currentTimeMillis();
+
+                        // Mengecek apakah QR yang terbaca sama
+                        // dan dibaca kurang dari 3 detik
+                        if (isiQR.equals(lastQRCode)
+                                && (sekarang - lastScanTime) < 3000) {
+
+                            // Jika sama, abaikan pembacaan
+                            continue;
+                        }
+
+                        // Menyimpan QR terakhir yang berhasil dibaca
+                        lastQRCode = isiQR;
+
+                        // Menyimpan waktu pembacaan terakhir
+                        lastScanTime = sekarang;
+
+                        // Menjalankan proses simpan absensi
+                        // pada Event Dispatch Thread Swing
+                        javax.swing.SwingUtilities.invokeLater(() -> {
+                            simpanIdAbsensi(isiQR);
+                        });
+                        // Memberikan jeda 1,5 detik
+                        // agar QR tidak langsung terbaca kembali
+                        Thread.sleep(1500);
+                    }
+
+                } catch (NotFoundException ex) {
+
+                    // Tidak melakukan apa-apa
+                    // karena QR memang belum ditemukan
+                } catch (Exception ex) {
+
+                    // Menampilkan detail error apabila terjadi kesalahan
+                    ex.printStackTrace();
                 }
-
-            }catch(NotFoundException ex){
-
-                // Tidak melakukan apa-apa
-                // karena QR memang belum ditemukan
-
-            }catch(Exception ex){
-
-                // Menampilkan detail error apabila terjadi kesalahan
-                ex.printStackTrace();
             }
-        }
 
-    });
+        });
 
-}
-    
-    
-    private void tampilDataQR(String isiQR){
-
-    javax.swing.table.DefaultTableModel model =
-            (javax.swing.table.DefaultTableModel) jTable1.getModel();
-
-    model.addRow(new Object[]{
-        isiQR
-    });
-}
-    
-    
-    
-    
-     // Method untuk membuat ID Absensi secara otomatis
-private String generateIdAbsensi(){
-
-    // Memberikan nilai awal jika tabel absensi masih kosong
-    String idBaru = "ABS001";
-
-    try{
-
-        // Membuka koneksi ke database
-        Connection conn = Koneksi.konek();
-
-        // Mengambil ID Absensi terbesar dari database
-        String sql = "SELECT id_absensi FROM absensi ORDER BY id_absensi DESC LIMIT 1";
-
-        // Membuat Statement untuk menjalankan query
-        Statement st = conn.createStatement();
-
-        // Menjalankan query dan menyimpan hasilnya
-        ResultSet rs = st.executeQuery(sql);
-
-        // Mengecek apakah tabel absensi sudah memiliki data
-        if(rs.next()){
-
-            // Mengambil ID terakhir, contoh: ABS015
-            String idLama = rs.getString("id_absensi");
-
-            // Mengambil bagian angka saja, contoh: 015
-            int angka = Integer.parseInt(idLama.substring(3));
-
-            // Menambahkan angka sebesar 1
-            angka++;
-
-            // Membentuk kembali ID dengan format ABS001, ABS002, dan seterusnya
-            idBaru = String.format("ABS%03d", angka);
-        }
-          }catch(Exception e){
-
-        // Menampilkan detail error apabila terjadi kesalahan
-        e.printStackTrace();
     }
 
-    // Mengembalikan ID baru yang telah dibuat
-    return idBaru;
-}
+    private void tampilDataQR(String isiQR) {
 
-    
-     // Method untuk menyimpan data absensi hasil scan QR ke database
-private void simpanIdAbsensi(String nisn){
-    try{
+        javax.swing.table.DefaultTableModel model
+                = (javax.swing.table.DefaultTableModel) jTable1.getModel();
 
-        // Membuat ID absensi baru secara otomatis
-        String idAbsensi = generateIdAbsensi();
+        model.addRow(new Object[]{
+            isiQR
+        });
+    }
 
-        // Mengambil tanggal hari ini
-        String tanggal = LocalDate.now().toString();
+    // Method untuk membuat ID Absensi secara otomatis
+    private String generateIdAbsensi() {
 
-        // Mengambil jam saat ini (tanpa menampilkan nanodetik)
-        String jam = LocalTime.now().withNano(0).toString();
+        // Memberikan nilai awal jika tabel absensi masih kosong
+        String idBaru = "ABS001";
 
-        // Menentukan status kehadiran secara otomatis
-        String status = "Hadir";
+        try {
 
-        // Menentukan metode absensi secara otomatis
-        String metode = "QR code";
+            // Membuka koneksi ke database
+            Connection conn = Koneksi.konek();
 
-        // Membuka koneksi ke database
-        Connection conn = Koneksi.konek();
+            // Mengambil ID Absensi terbesar dari database
+            String sql = "SELECT id_absensi FROM absensi ORDER BY id_absensi DESC LIMIT 1";
 
-        // Query untuk menyimpan data absensi ke tabel absensi
-        String sql = "INSERT INTO absensi(id_absensi, tanggal, jam_absensi, status, metode, nisn) VALUES(?,?,?,?,?,?)";
+            // Membuat Statement untuk menjalankan query
+            Statement st = conn.createStatement();
 
-        // Menyiapkan query SQL
-        PreparedStatement pst = conn.prepareStatement(sql);
+            // Menjalankan query dan menyimpan hasilnya
+            ResultSet rs = st.executeQuery(sql);
 
-        // Mengisi parameter pertama dengan ID Absensi
-        pst.setString(1, idAbsensi);
+            // Mengecek apakah tabel absensi sudah memiliki data
+            if (rs.next()) {
 
-        // Mengisi parameter kedua dengan tanggal
-        pst.setString(2, tanggal);
+                // Mengambil ID terakhir, contoh: ABS015
+                String idLama = rs.getString("id_absensi");
 
-        // Mengisi parameter ketiga dengan jam absensi
-        pst.setString(3, jam);
+                // Mengambil bagian angka saja, contoh: 015
+                int angka = Integer.parseInt(idLama.substring(3));
 
-        // Mengisi parameter keempat dengan status kehadiran
-        pst.setString(4, status);
+                // Menambahkan angka sebesar 1
+                angka++;
+
+                // Membentuk kembali ID dengan format ABS001, ABS002, dan seterusnya
+                idBaru = String.format("ABS%03d", angka);
+            }
+        } catch (Exception e) {
+
+            // Menampilkan detail error apabila terjadi kesalahan
+            e.printStackTrace();
+        }
+
+        // Mengembalikan ID baru yang telah dibuat
+        return idBaru;
+    }
+
+    // Method untuk menyimpan data absensi hasil scan QR ke database
+    private void simpanIdAbsensi(String nisn) {
+        try {
+
+            // Membuat ID absensi baru secara otomatis
+            String idAbsensi = generateIdAbsensi();
+
+            // Mengambil tanggal hari ini
+            String tanggal = LocalDate.now().toString();
+
+            // Mengambil jam saat ini (tanpa menampilkan nanodetik)
+            String jam = LocalTime.now().withNano(0).toString();
+
+            // Menentukan status kehadiran secara otomatis
+            String status = "Hadir";
+
+            // Menentukan metode absensi secara otomatis
+            String metode = "QR code";
+
+            // Membuka koneksi ke database
+            Connection conn = Koneksi.konek();
+
+            String sqlCari = "SELECT id_siswa FROM siswa WHERE nisn = ?";
+            PreparedStatement psCari = conn.prepareStatement(sqlCari);
+            psCari.setString(1, nisn);
+
+            ResultSet rs = psCari.executeQuery();
+
+            if (!rs.next()) {
+                JOptionPane.showMessageDialog(null, "QR tidak terdaftar!");
+                return;
+            }
+
+            String idSiswa = rs.getString("id_siswa");
+
+            // Cek apakah siswa sudah absen hari ini
+            String cek = "SELECT * FROM absensi WHERE tanggal = ? AND id_siswa = ?";
+            PreparedStatement psCek = conn.prepareStatement(cek);
+            psCek.setString(1, tanggal);
+            psCek.setString(2, idSiswa);
+
+            ResultSet rsCek = psCek.executeQuery();
+
+            if (rsCek.next()) {
+                JOptionPane.showMessageDialog(null,
+                        "Siswa sudah melakukan absensi hari ini!");
+                return;
+            }
+
+            // Query untuk menyimpan data absensi ke tabel absensi
+            String sql = "INSERT INTO absensi(id_absensi, tanggal, jam_absensi, status, metode, id_siswa) VALUES(?,?,?,?,?,?)";
+
+            // Menyiapkan query SQL
+            PreparedStatement pst = conn.prepareStatement(sql);
+
+            // Mengisi parameter pertama dengan ID Absensi
+            pst.setString(1, idAbsensi);
+
+            // Mengisi parameter kedua dengan tanggal
+            pst.setString(2, tanggal);
+
+            // Mengisi parameter ketiga dengan jam absensi
+            pst.setString(3, jam);
+
+            // Mengisi parameter keempat dengan status kehadiran
+            pst.setString(4, status);
             // Mengisi parameter kelima dengan metode absensi
-        pst.setString(5, metode);
+            pst.setString(5, metode);
 
-        // Mengisi parameter keenam dengan NISN hasil scan QR
-        pst.setString(6, nisn);
-            
+            // Mengisi parameter keenam dengan NISN hasil scan QR
+            pst.setString(6, idSiswa);
+
             // Menjalankan proses penyimpanan data ke database
-        pst.executeUpdate();
+            pst.executeUpdate();
 
-        // Memperbarui tampilan JTable setelah data berhasil disimpan
-        load_table_absensi();
+            // Memperbarui tampilan JTable setelah data berhasil disimpan
+            load_table_absensi();
 
-    }catch(Exception e){
+        } catch (Exception e) {
 
-        // Menampilkan detail error pada Output NetBeans
-        e.printStackTrace();
+            // Menampilkan detail error pada Output NetBeans
+            e.printStackTrace();
 
-        // Menampilkan pesan jika siswa sudah melakukan absensi
-        JOptionPane.showMessageDialog(null, "Data Sudah Ada");
+            // Menampilkan pesan jika siswa sudah melakukan absensi
+            JOptionPane.showMessageDialog(null, "Gagal menyimpan absensi!");
+        }
     }
-}
-    
-    
-        // Method untuk mengosongkan seluruh isi JTable
+
+    // Method untuk mengosongkan seluruh isi JTable
     // tanpa menghapus data yang ada di database
-    private void resetTampilanTabel(){
+    private void resetTampilanTabel() {
 
         // Mengambil model yang sedang digunakan oleh JTable
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
@@ -478,54 +494,53 @@ private void simpanIdAbsensi(String nisn){
 
     // Method untuk mengosongkan tampilan JTable secara otomatis
 // sesuai jam yang telah ditentukan
-private void autoResetTable(){
+    private void autoResetTable() {
 
-    // Membuat Timer yang berjalan setiap 1 detik
-    javax.swing.Timer timer = new javax.swing.Timer(1000, e -> {
+        // Membuat Timer yang berjalan setiap 1 detik
+        javax.swing.Timer timer = new javax.swing.Timer(1000, e -> {
 
-        // Mengambil waktu saat ini dari komputer
-        LocalTime sekarang = LocalTime.now();
+            // Mengambil waktu saat ini dari komputer
+            LocalTime sekarang = LocalTime.now();
 
-        // Mengecek apakah waktu saat ini sudah sesuai
-        // dengan jadwal reset yang telah ditentukan
-        if(sekarang.getHour() == 22 &&
-           sekarang.getMinute() == 22 &&
-           sekarang.getSecond() == 0){
+            // Mengecek apakah waktu saat ini sudah sesuai
+            // dengan jadwal reset yang telah ditentukan
+            if (sekarang.getHour() == 22
+                    && sekarang.getMinute() == 22
+                    && sekarang.getSecond() == 0) {
 
-            // Mengosongkan seluruh isi JTable
-            resetTampilanTabel();
+                // Mengosongkan seluruh isi JTable
+                resetTampilanTabel();
 
-            // Menandai bahwa reset hari ini sudah dilakukan
-            sudahResetHariIni = true;
+                // Menandai bahwa reset hari ini sudah dilakukan
+                sudahResetHariIni = true;
 
-            // Menampilkan informasi pada Output NetBeans
-            System.out.println("table berhasil direset");
-        }
+                // Menampilkan informasi pada Output NetBeans
+                System.out.println("table berhasil direset");
+            }
 
-        // Mengecek apakah sudah memasuki hari berikutnya
-        if(sekarang.getHour() == 0 &&
-           sekarang.getMinute() == 1){
+            // Mengecek apakah sudah memasuki hari berikutnya
+            if (sekarang.getHour() == 0
+                    && sekarang.getMinute() == 1) {
 
-            // Mengizinkan proses reset dijalankan kembali
-            // pada hari berikutnya
-            sudahResetHariIni = false;
-        }
+                // Mengizinkan proses reset dijalankan kembali
+                // pada hari berikutnya
+                sudahResetHariIni = false;
+            }
 
-    });
+        });
         // Menjalankan Timer
-    timer.start();
-}
-     // Method untuk memperbarui isi JTable secara otomatis setiap 1 menit
-private void autoRefreshTable(){
+        timer.start();
+    }
+    // Method untuk memperbarui isi JTable secara otomatis setiap 1 menit
 
-    // Membuat Timer yang akan dijalankan setiap 60.000 millisecond (1 menit)
-    new javax.swing.Timer(60000, e ->
+    private void autoRefreshTable() {
 
-        // Memanggil method untuk mengambil ulang data absensi dari database
-        load_table_absensi()
-
-    ).start(); // Menjalankan Timer
-}
+        // Membuat Timer yang akan dijalankan setiap 60.000 millisecond (1 menit)
+        new javax.swing.Timer(60000, e
+                -> // Memanggil method untuk mengambil ulang data absensi dari database
+                load_table_absensi()
+        ).start(); // Menjalankan Timer
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -958,23 +973,60 @@ private void autoRefreshTable(){
     private void BtnMulaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnMulaiActionPerformed
         // TODO add your handling code here:
         // Mengecek apakah kamera sedang aktif
-    if(webcam != null && webcam.isOpen()){
+        if (webcam != null && webcam.isOpen()) {
 
-        // Menghentikan proses scanning QR
-        scanning = false;
+            // Menghentikan proses scanning QR
+            scanning = false;
 
-        // Mengecek apakah Executor masih berjalan
-        if(executor != null){
+            // Mengecek apakah Executor masih berjalan
+            if (executor != null) {
 
-            // Menghentikan thread scanning
-            executor.shutdown();
+                // Menghentikan thread scanning
+                executor.shutdown();
+            }
+
+            // Menutup kamera
+            webcam.close();
+
+            // Menghapus tampilan kamera dari panel
+            panelKamera.removeAll();
+
+            // Memperbarui tampilan panel
+            panelKamera.revalidate();
+
+            // Menggambar ulang panel
+            panelKamera.repaint();
+
+            // Mengubah warna status menjadi merah
+            jLabel4.setForeground(Color.RED);
+
+            // Menampilkan status bahwa kamera tidak aktif
+            jLabel4.setText("Kamera Tidak Aktif");
+
+            // Menghentikan method karena kamera sudah dimatikan
+            return;
         }
 
-        // Menutup kamera
-        webcam.close();
+        // Mengambil kamera yang dipilih pada ComboBox
+        webcam = daftarKamera.get(jComboBox1.getSelectedIndex());
 
-        // Menghapus tampilan kamera dari panel
+        // Mengatur resolusi kamera
+        webcam.setViewSize(new Dimension(640, 480));
+
+        // Membuka kamera
+        webcam.open();
+
+        // Menampilkan hasil kamera pada WebcamPanel
+        webcamPanel = new WebcamPanel(webcam);
+
+        // Menghapus isi panel kamera sebelumnya
         panelKamera.removeAll();
+
+        // Mengubah layout panel menjadi BorderLayout
+        panelKamera.setLayout(new BorderLayout());
+
+        // Menambahkan tampilan kamera ke panel
+        panelKamera.add(webcamPanel, BorderLayout.CENTER);
 
         // Memperbarui tampilan panel
         panelKamera.revalidate();
@@ -982,51 +1034,14 @@ private void autoRefreshTable(){
         // Menggambar ulang panel
         panelKamera.repaint();
 
-        // Mengubah warna status menjadi merah
-        jLabel4.setForeground(Color.RED);
+        // Memulai proses scan QR secara real-time
+        scanQR();
 
-        // Menampilkan status bahwa kamera tidak aktif
-        jLabel4.setText("Kamera Tidak Aktif");
+        // Mengubah warna status menjadi hijau
+        jLabel4.setForeground(new Color(0, 153, 0));
 
-        // Menghentikan method karena kamera sudah dimatikan
-        return;
-    }
-        
-                // Mengambil kamera yang dipilih pada ComboBox
-           webcam = daftarKamera.get(jComboBox1.getSelectedIndex());
-
-           // Mengatur resolusi kamera
-           webcam.setViewSize(new Dimension(640, 480));
-
-           // Membuka kamera
-           webcam.open();
-
-           // Menampilkan hasil kamera pada WebcamPanel
-           webcamPanel = new WebcamPanel(webcam);
-
-           // Menghapus isi panel kamera sebelumnya
-           panelKamera.removeAll();
-
-           // Mengubah layout panel menjadi BorderLayout
-           panelKamera.setLayout(new BorderLayout());
-
-           // Menambahkan tampilan kamera ke panel
-           panelKamera.add(webcamPanel, BorderLayout.CENTER);
-
-           // Memperbarui tampilan panel
-           panelKamera.revalidate();
-
-           // Menggambar ulang panel
-           panelKamera.repaint();
-
-           // Memulai proses scan QR secara real-time
-           scanQR();
-
-           // Mengubah warna status menjadi hijau
-           jLabel4.setForeground(new Color(0,153,0));
-
-           // Menampilkan status bahwa kamera sedang aktif
-           jLabel4.setText("Kamera Aktif");
+        // Menampilkan status bahwa kamera sedang aktif
+        jLabel4.setText("Kamera Aktif");
 
     }//GEN-LAST:event_BtnMulaiActionPerformed
 

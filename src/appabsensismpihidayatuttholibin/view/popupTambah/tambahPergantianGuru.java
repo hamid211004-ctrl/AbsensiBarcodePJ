@@ -99,20 +99,20 @@ public class tambahPergantianGuru extends javax.swing.JDialog {
     }
     
     private String cariNip(String namaGuru) {
-        String nipDitemukan = "";
+        String idDitemukan = "";
         try {
             java.sql.Connection conn = Koneksi.konek();
-            String sql = "SELECT nip FROM guru WHERE nama_guru = ?";
+            String sql = "SELECT id_guru FROM guru WHERE nama_guru = ?";
             java.sql.PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, namaGuru);
             java.sql.ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                nipDitemukan = rs.getString("nip");
+                idDitemukan = rs.getString("id_guru");
             }
         } catch (java.sql.SQLException e) {
             System.out.println("Gagal mencari NIP: " + e.getMessage());
         }
-        return nipDitemukan;
+        return idDitemukan;
     }
     
     private void generateIdPergantian() {
@@ -596,8 +596,8 @@ public class tambahPergantianGuru extends javax.swing.JDialog {
                 + "mapel, "
                 + "tugas_materi, "
                 + "keterangan, "
-                + "nip_digantikan, "
-                + "nip_menggantikan) "
+                + "id_digantikan, "
+                + "id_menggantikan) "
                 + "VALUES (?,?,?,?,?,?,?,?)";
 
         try {

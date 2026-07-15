@@ -25,6 +25,7 @@ public class ubahAbsensiManual extends javax.swing.JDialog {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ubahAbsensiManual.class.getName());
     private panelAbsensiManual pA;
+    private String idSiswa;
     
     /**
      * Creates new form ubahAbsensiManual
@@ -94,7 +95,7 @@ public class ubahAbsensiManual extends javax.swing.JDialog {
         String nama = cbNama.getSelectedItem().toString();
 
         String sql
-                = "SELECT s.nisn, k.nama_kelas "
+                = "SELECT s.id_siswa, s.nisn, k.nama_kelas "
                 + "FROM siswa s "
                 + "LEFT JOIN kelas k ON s.id_kelas = k.id_kelas "
                 + "WHERE s.nama_siswa = ?";
@@ -109,6 +110,7 @@ public class ubahAbsensiManual extends javax.swing.JDialog {
 
             if (rs.next()) {
 
+                idSiswa = rs.getString("id_siswa");
                 tNISN.setText(rs.getString("nisn"));
                 tKelas.setText(rs.getString("nama_kelas"));
 
@@ -510,14 +512,14 @@ public class ubahAbsensiManual extends javax.swing.JDialog {
         String nisn = tNISN.getText();
         String status = cbStatus.getSelectedItem().toString();
         
-        String sql = "UPDATE absensi SET tanggal=?, nisn=?, status=? WHERE id_absensi=?";
+        String sql = "UPDATE absensi SET tanggal=?, id_siswa=?, status=? WHERE id_absensi=?";
         
         try {
             Connection conn = Koneksi.konek();
             PreparedStatement ps = conn.prepareStatement(sql);
             
             ps.setString(1, tanggal);
-            ps.setString(2, nisn);
+            ps.setString(2, idSiswa);
             ps.setString(3, status);
             ps.setString(4, idAbsensi);
             ps.executeUpdate();

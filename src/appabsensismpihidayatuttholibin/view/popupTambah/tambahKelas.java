@@ -86,7 +86,7 @@ public class tambahKelas extends javax.swing.JDialog {
         cWali.setSelectedItem(null);
     }
 
-    String NIP(String namaGuru) {
+    String id(String namaGuru) {
         try {
             //query dengan paramenter untuk mencari guru berdasarkan nama 
             String sql = "SELECT * FROM guru WHERE nama_guru = ?";
@@ -102,7 +102,7 @@ public class tambahKelas extends javax.swing.JDialog {
 
             //jika data ditemukan, kembalikan NIP guru 
             while (rs.next()) {
-                return rs.getString("nip");
+                return rs.getString("id_guru");
             }
         } catch (SQLException e) {
             //jika error, kembalikan string kosong 
@@ -447,11 +447,11 @@ public class tambahKelas extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, "Wali kelas harus dipilih!");
             return;
         }
-        String waliKelas = NIP(cWali.getSelectedItem().toString());
+        String waliKelas = id(cWali.getSelectedItem().toString());
 
         try {
             //Query SQL untuk menyisipkan data ke tabel kelas
-            String sql = "INSERT INTO kelas(id_kelas, nama_kelas, nip) VALUES (?,?,?)";
+            String sql = "INSERT INTO kelas(id_kelas, nama_kelas, id_guru) VALUES (?,?,?)";
 
             //Buat koneksi ke database menggunakan method koneksi() dari class koneksi
             Connection conn = Koneksi.konek();

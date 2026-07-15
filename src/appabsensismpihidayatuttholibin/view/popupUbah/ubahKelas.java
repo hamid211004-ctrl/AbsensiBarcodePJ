@@ -26,28 +26,29 @@ import javax.swing.SwingUtilities;
  * @author ASUS
  */
 public class ubahKelas extends javax.swing.JDialog {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ubahKelas.class.getName());
     private panelKelas pK;
+
     /**
      * Creates new form ubahKelas
      */
     public ubahKelas(java.awt.Frame parent, boolean modal, panelKelas pK) {
         super(parent, modal);
         initComponents();
-        
+
         //supaya JDialognya tranparan jadi roundnya jadi kelihatan dehh
         this.setBackground(new Color(0, 0, 0, 0));
         if (this.getContentPane() instanceof javax.swing.JComponent) {
             ((javax.swing.JComponent) this.getContentPane()).setOpaque(false);
         }
-        
+
         borderLengkung(panelUtama, "#828282");
-        
+
         comboWaliKelas();
-        
+
         this.pK = pK;
-        
+
         tKode.setEditable(false);
         tKode.setFocusable(false);
 
@@ -55,7 +56,7 @@ public class ubahKelas extends javax.swing.JDialog {
             tNama.requestFocusInWindow();
         });
     }
-    
+
     //method untuk custom panel supaya ada roundnya dan bordernya
     void borderLengkung(JPanel panel, String hexColor) {
         panel.setBorder(new FlatLineBorder(
@@ -65,56 +66,58 @@ public class ubahKelas extends javax.swing.JDialog {
                 20
         ));
     }
-    
-    public void setDataKelas(String idKelas, String namaKelas, String waliKelas){
-        
+
+    public void setDataKelas(String idKelas, String namaKelas, String waliKelas) {
+
         tKode.setText(idKelas);
         tKode.setEditable(false);
-        
+
         tNama.setText(namaKelas);
-        
+
         cWali.setSelectedItem(waliKelas);
     }
-    
-    void comboWaliKelas(){
-        
-        try{
-           String sql = "SELECT * FROM guru";
-           Connection conn = Koneksi.konek();
-           Statement st = conn.createStatement();
+
+    void comboWaliKelas() {
+
+        try {
+            String sql = "SELECT * FROM guru";
+            Connection conn = Koneksi.konek();
+            Statement st = conn.createStatement();
             ResultSet resultSet = st.executeQuery(sql);
-            
-            while (resultSet.next()){
+
+            while (resultSet.next()) {
                 cWali.addItem(resultSet.getString("nama_guru"));
             }
 
-      } catch (SQLException e){                    }
+        } catch (SQLException e) {
+        }
         cWali.setSelectedItem(null);
     }
-    String NIP(String namaGuru){
-        try{
+
+    String NIP(String namaGuru) {
+        try {
             //query dengan paramenter untuk mencari guru berdasarkan nama 
-            String sql = "SELECT nip FROM guru WHERE nama_guru = ?";
+            String sql = "SELECT id_guru FROM guru WHERE nama_guru = ?";
             //membuka koneksi ke database 
             Connection conn = Koneksi.konek();
             //siapkan preparedStatement 
             PreparedStatement ps = conn.prepareStatement(sql);
             //isi paramenter query dengan nama jurusan 
             ps.setString(1, namaGuru);
-            
+
             //menjalankan query dan menyimpan hasilnya dalam resultSet 
             ResultSet rs = ps.executeQuery();
-            
+
             //jika data ditemukan, kembalikan NIP guru 
-            while(rs.next()){
-                return rs.getString("nip");
+            while (rs.next()) {
+                return rs.getString("id_guru");
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             //jika error, kembalikan string kosong 
-            return"";
+            return "";
         }
         //jika tidak ditemukan, kembalikan string kosong 
-        return"";
+        return "";
     }
 
     /**
@@ -396,33 +399,31 @@ public class ubahKelas extends javax.swing.JDialog {
     private void bUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bUbahActionPerformed
         // TODO add your handling code here:
         //Ambil input dari text field pada GUI 
-       String idKelas = tKode.getText();
-       String namaKelas = tNama.getText();
-       String namaGuru = cWali.getSelectedItem().toString();
-       String waliKelas = NIP(namaGuru);
-       
-           try{
-           String sql = "UPDATE kelas SET nama_kelas=?, nip=? WHERE id_kelas=?";
-           Connection conn = Koneksi.konek();
-           PreparedStatement ps = conn.prepareStatement(sql);
-           
-           ps.setString(1, namaKelas);
-           ps.setString(2, waliKelas);
-           ps.setString(3, idKelas);
-           
-           ps.executeUpdate();
-           
-           JOptionPane.showMessageDialog(null, "Data berhasil dirubah");
-           
-           pK.load_tabel_kelas();
-        } catch (SQLException e){
+        String idKelas = tKode.getText();
+        String namaKelas = tNama.getText();
+        String namaGuru = cWali.getSelectedItem().toString();
+        String waliKelas = NIP(namaGuru);
+
+        try {
+            String sql = "UPDATE kelas SET nama_kelas=?, id_guru=? WHERE id_kelas=?";
+            Connection conn = Koneksi.konek();
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setString(1, namaKelas);
+            ps.setString(2, waliKelas);
+            ps.setString(3, idKelas);
+
+            ps.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Data berhasil dirubah");
+
+            pK.load_tabel_kelas();
+        } catch (SQLException e) {
             //JOptionPane.showMessageDialog(null, "Data gagal dirubah!");
             e.printStackTrace();
-          JOptionPane.showMessageDialog(this, e.getMessage());
+            JOptionPane.showMessageDialog(this, e.getMessage());
         }
-// //     pK.load_tabel_kelas():
-// //     reset();
-       this.dispose();
+        this.dispose();
     }//GEN-LAST:event_bUbahActionPerformed
 
     /**

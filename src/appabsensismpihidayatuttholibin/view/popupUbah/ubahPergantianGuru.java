@@ -87,20 +87,20 @@ public class ubahPergantianGuru extends javax.swing.JDialog {
     }
 
     private String cariNip(String namaGuru) {
-        String nipDitemukan = "";
+        String idDitemukan = "";
         try {
             Connection conn = Koneksi.konek();
-            String sql = "SELECT nip FROM guru WHERE nama_guru = ?";
+            String sql = "SELECT id_guru FROM guru WHERE nama_guru = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, namaGuru);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                nipDitemukan = rs.getString("nip");
+                idDitemukan = rs.getString("id_guru");
             }
         } catch (SQLException e) {
             System.out.println("Gagal mencari NIP: " + e.getMessage());
         }
-        return nipDitemukan;
+        return idDitemukan;
     }
 
     public void setDataPergantianGuru(String id, String tanggal, String guruUtama, String mapel, String jamKe, String tugasMateri, String guruPengganti, String keterangan) {
@@ -502,8 +502,8 @@ public class ubahPergantianGuru extends javax.swing.JDialog {
                 + "mapel=?, "
                 + "tugas_materi=?, "
                 + "keterangan=?, "
-                + "nip_digantikan=?, "
-                + "nip_menggantikan=? "
+                + "id_digantikan=?, "
+                + "id_menggantikan=? "
                 + "WHERE id_pergantianguru=?";
 
         try {

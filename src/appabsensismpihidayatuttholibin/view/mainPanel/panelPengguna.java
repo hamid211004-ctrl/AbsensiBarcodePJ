@@ -48,10 +48,10 @@ public class panelPengguna extends javax.swing.JPanel {
 
     //custom untuk header tabel
     private void customTable() {
-        tblPengguna.setRowHeight(40);
+        tblPengguna.setRowHeight(45);
 
         JTableHeader header = tblPengguna.getTableHeader();
-        header.setPreferredSize(new Dimension(100, 40));
+        header.setPreferredSize(new Dimension(100, 45));
 
         header.setDefaultRenderer(new DefaultTableCellRenderer() {
             @Override

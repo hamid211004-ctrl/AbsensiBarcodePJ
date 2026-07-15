@@ -31,6 +31,7 @@ public class tambahAbsensiManual extends javax.swing.JDialog {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(tambahAbsensiManual.class.getName());
     private panelAbsensiManual pA;
+    private String idSiswa;
 
     /**
      * Creates new form tambahAbsensiManual
@@ -108,7 +109,7 @@ public class tambahAbsensiManual extends javax.swing.JDialog {
         String nama = cbNama.getSelectedItem().toString();
 
         String sql
-                = "SELECT s.nisn, k.nama_kelas "
+                = "SELECT s.id_siswa, s.nisn, k.nama_kelas "
                 + "FROM siswa s "
                 + "LEFT JOIN kelas k ON s.id_kelas = k.id_kelas "
                 + "WHERE s.nama_siswa = ?";
@@ -122,10 +123,9 @@ public class tambahAbsensiManual extends javax.swing.JDialog {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-
+                idSiswa = rs.getString("id_siswa");
                 tNISN.setText(rs.getString("nisn"));
                 tKelas.setText(rs.getString("nama_kelas"));
-
             } else {
 
                 tNISN.setText("");
@@ -528,14 +528,11 @@ public class tambahAbsensiManual extends javax.swing.JDialog {
         java.text.SimpleDateFormat formatJam = new java.text.SimpleDateFormat("HH:mm:ss");
         String jam = formatJam.format(waktuSekarang);
 
-        String nisn = tNISN.getText();
         String status = cbStatus.getSelectedItem().toString();
 
-        String sql = "INSERT INTO absensi (id_absensi, "
-                + "tanggal, "
-                + "nisn, "
-                + "jam_absensi, "
-                + "status) VALUES (?,?,?,?,?)";
+        String sql = "INSERT INTO absensi "
+                + "(id_absensi, tanggal, id_siswa, jam_absensi, status) "
+                + "VALUES (?,?,?,?,?)";
 
         try {
             Connection conn = Koneksi.konek();
@@ -543,7 +540,7 @@ public class tambahAbsensiManual extends javax.swing.JDialog {
 
             ps.setString(1, idAbsensi);
             ps.setString(2, tanggal);
-            ps.setString(3, nisn);
+            ps.setString(3, idSiswa);
             ps.setString(4, jam);
             ps.setString(5, status);
             ps.execute();

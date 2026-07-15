@@ -44,10 +44,10 @@ private String waliKelasDipilih;
     
     //custom untuk header tabel
     private void customTable() {
-    tblKelas.setRowHeight(40);
+    tblKelas.setRowHeight(45);
 
     JTableHeader header = tblKelas.getTableHeader();
-    header.setPreferredSize(new Dimension(100, 40));
+    header.setPreferredSize(new Dimension(100, 45));
 
     header.setDefaultRenderer(new DefaultTableCellRenderer() {
         @Override
@@ -93,7 +93,7 @@ private String waliKelasDipilih;
              //Query SQL untuk mengambil semua data dari tabel kelas
              String sql = "SELECT k.id_kelas, k.nama_kelas, g.nama_guru " + 
                      "FROM kelas k " +
-                     "LEFT JOIN guru g ON k.nip = g.nip ";
+                     "LEFT JOIN guru g ON k.id_guru = g.id_guru ";
              
              //Membuka koneksi ke database
              Connection conn = Koneksi.konek();
@@ -396,19 +396,47 @@ private String waliKelasDipilih;
 
     private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnHapusActionPerformed
         // TODO add your handling code here:
-        String sql = "DELETE FROM kelas WHERE id_kelas=?";
-        
-        try{
-           Connection conn = Koneksi.konek();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, idKelasDipilih);
-            ps.execute();
-            
-            JOptionPane.showMessageDialog(null, "Data berhasil dihapus!"); 
-        } catch (SQLException sQLException){
-            JOptionPane.showMessageDialog(null, "Data gagal dihapus!");
+        // Memastikan data kelas telah dipilih.
+        if (idKelasDipilih.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Pilih data yang akan dihapus");
+            return;
         }
-        load_tabel_kelas();
+
+        // Menampilkan konfirmasi penghapusan data.
+        int konfirmasi = JOptionPane.showConfirmDialog(
+                this,
+                "Yakin ingin menghapus data ini?",
+                "Konfirmasi",
+                JOptionPane.YES_NO_OPTION);
+
+        if (konfirmasi == JOptionPane.YES_OPTION) {
+
+            try {
+
+                // Query untuk menghapus data guru berdasarkan NIP.
+                String sql = "DELETE FROM kelas WHERE id_kelas=?";
+
+                Connection conn = Koneksi.konek(); // Membuka koneksi database.
+                PreparedStatement ps = conn.prepareStatement(sql); // Menyiapkan query.
+                ps.setString(1, idKelasDipilih); // Mengisi parameter NIP.
+
+                int hasil = ps.executeUpdate(); // Menjalankan query hapus.
+
+                if (hasil > 0) {
+
+                    JOptionPane.showMessageDialog(this, "Data berhasil dihapus");
+
+                    load_tabel_kelas(); // Memperbarui data pada tabel.
+
+                }
+
+            } catch (SQLException e) {
+
+                e.printStackTrace(); // Menampilkan error pada console.
+                JOptionPane.showMessageDialog(this, e.getMessage());
+
+            }
+        }
     }//GEN-LAST:event_BtnHapusActionPerformed
 
 

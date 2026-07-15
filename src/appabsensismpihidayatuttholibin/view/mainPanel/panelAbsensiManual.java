@@ -51,10 +51,10 @@ public class panelAbsensiManual extends javax.swing.JPanel {
 
     //custom untuk header tabel
     private void customTable() {
-        tblAbsensi.setRowHeight(40);
+        tblAbsensi.setRowHeight(45);
 
         JTableHeader header = tblAbsensi.getTableHeader();
-        header.setPreferredSize(new Dimension(100, 40));
+        header.setPreferredSize(new Dimension(100, 45));
 
         header.setDefaultRenderer(new DefaultTableCellRenderer() {
             @Override
@@ -101,9 +101,9 @@ public class panelAbsensiManual extends javax.swing.JPanel {
 
         try {
             //Query SQL untuk mengambil semua data dari tabel guru
-            String sql = "SELECT a.id_absensi, a.tanggal, a.jam_absensi, a.status, a.nisn, s.nama_siswa, k.nama_kelas "
+            String sql = "SELECT a.id_absensi, a.tanggal, a.jam_absensi, a.status, s.nisn, s.nama_siswa, k.nama_kelas "
                     + "FROM absensi a "
-                    + "JOIN siswa s ON a.nisn = s.nisn "
+                    + "JOIN siswa s ON a.id_siswa = s.id_siswa "
                     + "LEFT JOIN kelas k ON s.id_kelas = k.id_kelas "
                     + "WHERE a.tanggal = CURDATE()";
 
@@ -122,10 +122,10 @@ public class panelAbsensiManual extends javax.swing.JPanel {
                 String id = rs.getString("id_absensi");
                 String tgl = rs.getString("tanggal");
                 String jam = rs.getString("jam_absensi");
+                String NISN = rs.getString("nisn");
                 String nama = rs.getString("nama_siswa");
                 String kls = rs.getString("nama_kelas");
                 String status = rs.getString("status");
-                String NISN = rs.getString("nisn");
 
                 //menyusun data kedalam array objek
                 Object[] baris = {id, tgl, jam, NISN, nama, kls, status};

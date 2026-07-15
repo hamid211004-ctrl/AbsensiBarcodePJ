@@ -32,18 +32,25 @@ public class ubahGuru extends javax.swing.JDialog {
     public ubahGuru(java.awt.Frame parent, boolean modal, panelGuru pG) {
         super(parent, modal);
         initComponents();
-        
+
         //supaya JDialognya tranparan jadi roundnya jadi kelihatan dehh
         this.setBackground(new Color(0, 0, 0, 0));
         if (this.getContentPane() instanceof javax.swing.JComponent) {
             ((javax.swing.JComponent) this.getContentPane()).setOpaque(false);
         }
-        
+
         borderLengkung(panelUtama, "#828282");
 
         this.pG = pG;
+        
+        tID.setEditable(false);
+        tID.setFocusable(false);
+
+        java.awt.EventQueue.invokeLater(() -> {
+            tNIP1.requestFocusInWindow();
+        });
     }
-    
+
     //method untuk custom panel supaya ada roundnya dan bordernya
     void borderLengkung(JPanel panel, String hexColor) {
         panel.setBorder(new FlatLineBorder(
@@ -54,11 +61,11 @@ public class ubahGuru extends javax.swing.JDialog {
         ));
     }
 
-    public void setDataGuru(String NIP, String namaGuru, String JK,
+    public void setDataGuru(String idGuru, String NIP, String namaGuru, String JK,
             String tgl, String alamat, String hp) {
 
-        tNIP.setText(NIP);
-        tNIP.setEditable(false);
+        tID.setText(idGuru);
+        tNIP1.setText(NIP);
 
         tNama.setText(namaGuru);
 
@@ -100,13 +107,14 @@ public class ubahGuru extends javax.swing.JDialog {
         bUbah = new javax.swing.JButton();
         bBatal = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
-        tNIP = new javax.swing.JTextField();
+        tID = new javax.swing.JTextField();
         tNama = new javax.swing.JTextField();
         cJK = new javax.swing.JComboBox<>();
         tTanggal = new com.toedter.calendar.JDateChooser();
         tHP = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tAlamat = new javax.swing.JTextArea();
+        tNIP1 = new javax.swing.JTextField();
         jPanel6 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -114,6 +122,7 @@ public class ubahGuru extends javax.swing.JDialog {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
         lClose = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
@@ -163,10 +172,9 @@ public class ubahGuru extends javax.swing.JDialog {
 
         jPanel7.setBackground(new java.awt.Color(229, 234, 239));
 
-        tNIP.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tNIP.setForeground(new java.awt.Color(114, 114, 114));
-        tNIP.setText("NIP/NIY");
-        tNIP.setPreferredSize(new java.awt.Dimension(71, 35));
+        tID.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
+        tID.setForeground(new java.awt.Color(114, 114, 114));
+        tID.setPreferredSize(new java.awt.Dimension(71, 35));
 
         tNama.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
         tNama.setForeground(new java.awt.Color(114, 114, 114));
@@ -193,25 +201,34 @@ public class ubahGuru extends javax.swing.JDialog {
         tAlamat.setRows(5);
         jScrollPane1.setViewportView(tAlamat);
 
+        tNIP1.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
+        tNIP1.setForeground(new java.awt.Color(114, 114, 114));
+        tNIP1.setText("NIP/NIY");
+        tNIP1.setPreferredSize(new java.awt.Dimension(71, 35));
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(tNIP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(tNama, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(cJK, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(tTanggal, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
+                    .addComponent(tTanggal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(tHP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addGap(12, 12, 12))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tNIP1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(tNIP, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(tID, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 20, Short.MAX_VALUE)
+                .addComponent(tNIP1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(tNama, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -228,7 +245,7 @@ public class ubahGuru extends javax.swing.JDialog {
 
         jLabel1.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel1.setText("NIP/NIY");
+        jLabel1.setText("ID Guru");
         jLabel1.setPreferredSize(new java.awt.Dimension(37, 35));
 
         jLabel2.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
@@ -256,22 +273,34 @@ public class ubahGuru extends javax.swing.JDialog {
         jLabel6.setText("No Telepon");
         jLabel6.setPreferredSize(new java.awt.Dimension(37, 35));
 
+        jLabel8.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel8.setText("NIP/NIY");
+        jLabel8.setPreferredSize(new java.awt.Dimension(37, 35));
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(21, 21, 21)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addGap(0, 11, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -294,9 +323,9 @@ public class ubahGuru extends javax.swing.JDialog {
                         .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(20, 20, 20)
                         .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 416, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 6, Short.MAX_VALUE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 416, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -336,7 +365,7 @@ public class ubahGuru extends javax.swing.JDialog {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(26, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18))
         );
@@ -346,26 +375,29 @@ public class ubahGuru extends javax.swing.JDialog {
         panelUtamaLayout.setHorizontalGroup(
             panelUtamaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelUtamaLayout.createSequentialGroup()
-                .addGap(30, 30, 30)
                 .addGroup(panelUtamaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 416, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(panelUtamaLayout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelUtamaLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 416, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
                 .addComponent(lClose, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         panelUtamaLayout.setVerticalGroup(
             panelUtamaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelUtamaLayout.createSequentialGroup()
-                .addGroup(panelUtamaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelUtamaLayout.createSequentialGroup()
+                .addGroup(panelUtamaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelUtamaLayout.createSequentialGroup()
                         .addComponent(lClose, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelUtamaLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelUtamaLayout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -391,7 +423,9 @@ public class ubahGuru extends javax.swing.JDialog {
 
     private void bUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bUbahActionPerformed
         // TODO add your handling code here:
-        String NIP = tNIP.getText();
+        
+        String ID = tID.getText();
+        String NIP = tNIP1.getText();
         String namaGuru = tNama.getText();
         String jenisKelamin = cJK.getSelectedItem().toString();
         String jk = null;
@@ -415,16 +449,17 @@ public class ubahGuru extends javax.swing.JDialog {
         String hp = tHP.getText();
 
         try {
-            String sql = "UPDATE guru SET nama_guru=?, jenis_kelamin=?, tgl_lahir=?, alamat=?, no_telepon=? WHERE nip=?";
+            String sql = "UPDATE guru SET nip=?, nama_guru=?, jenis_kelamin=?, tgl_lahir=?, alamat=?, no_telepon=? WHERE id_guru=?";
             Connection conn = Koneksi.konek();
             PreparedStatement ps = conn.prepareStatement(sql);
 
-            ps.setString(1, namaGuru);
-            ps.setString(2, jk);
-            ps.setString(3, tgl);
-            ps.setString(4, alamat);
-            ps.setString(5, hp);
-            ps.setString(6, NIP);
+            ps.setString(1, NIP);
+            ps.setString(2, namaGuru);
+            ps.setString(3, jk);
+            ps.setString(4, tgl);
+            ps.setString(5, alamat);
+            ps.setString(6, hp);
+            ps.setString(7, ID);
 
             ps.executeUpdate();
             JOptionPane.showInternalMessageDialog(null, "Data berhasil diubah");
@@ -488,6 +523,7 @@ public class ubahGuru extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
@@ -499,7 +535,8 @@ public class ubahGuru extends javax.swing.JDialog {
     private javax.swing.JPanel panelUtama;
     private javax.swing.JTextArea tAlamat;
     private javax.swing.JTextField tHP;
-    private javax.swing.JTextField tNIP;
+    private javax.swing.JTextField tID;
+    private javax.swing.JTextField tNIP1;
     private javax.swing.JTextField tNama;
     private com.toedter.calendar.JDateChooser tTanggal;
     // End of variables declaration//GEN-END:variables

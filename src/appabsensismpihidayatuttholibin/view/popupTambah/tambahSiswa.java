@@ -56,6 +56,15 @@ public class tambahSiswa extends javax.swing.JDialog {
         this.pS = pS;
 
         loadComboKelass();
+
+        generateIdSiswa();
+
+        tIDSiswa.setEditable(false);
+        tIDSiswa.setFocusable(false);
+
+        java.awt.EventQueue.invokeLater(() -> {
+            tNISN1.requestFocusInWindow();
+        });
     }
 
     void borderLengkung(JPanel panel, String hexColor) {
@@ -115,12 +124,34 @@ public class tambahSiswa extends javax.swing.JDialog {
         return "";
     }
 
+    private void generateIdSiswa() {
+        try {
+            Connection conn = Koneksi.konek();
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery("SELECT id_siswa FROM siswa ORDER BY id_siswa DESC LIMIT 1");
+
+            if (rs.next()) {
+                //ambil angka setelah ABS
+                String id = rs.getString("id_siswa").substring(3);
+                int no = Integer.parseInt(id) + 1;
+
+                tIDSiswa.setText(String.format("SWS%03d", no));
+            } else {
+                tIDSiswa.setText("SWS001");
+            }
+            rs.close();
+            st.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Gagal generate ID : " + e.getMessage());
+        }
+    }
+
     private void generateQRCode(String nisn, String nama, String kelas) {
 
         try {
 
             Connection conn = Koneksi.konek();
-            
+
             // Folder penyimpanan
             String folder = "src/QR/";
 
@@ -186,8 +217,9 @@ public class tambahSiswa extends javax.swing.JDialog {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
-        tNISN = new javax.swing.JTextField();
+        tIDSiswa = new javax.swing.JTextField();
         tNama = new javax.swing.JTextField();
         cbJK = new javax.swing.JComboBox<>();
         jTGL = new com.toedter.calendar.JDateChooser();
@@ -195,6 +227,7 @@ public class tambahSiswa extends javax.swing.JDialog {
         cbKelas = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         tAlamat = new javax.swing.JTextArea();
+        tNISN1 = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         jPanel8 = new javax.swing.JPanel();
         bSimpan = new javax.swing.JButton();
@@ -237,7 +270,7 @@ public class tambahSiswa extends javax.swing.JDialog {
 
         jLabel1.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel1.setText("NISN");
+        jLabel1.setText("ID Siswa");
         jLabel1.setPreferredSize(new java.awt.Dimension(37, 35));
 
         jLabel2.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
@@ -270,11 +303,16 @@ public class tambahSiswa extends javax.swing.JDialog {
         jLabel8.setText("Kelas");
         jLabel8.setPreferredSize(new java.awt.Dimension(37, 35));
 
+        jLabel9.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel9.setText("NISN");
+        jLabel9.setPreferredSize(new java.awt.Dimension(37, 35));
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -283,12 +321,15 @@ public class tambahSiswa extends javax.swing.JDialog {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGap(6, 6, 6)
                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addGap(25, 25, 25)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -301,21 +342,20 @@ public class tambahSiswa extends javax.swing.JDialog {
                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(19, 19, 19))
         );
 
         jPanel7.setBackground(new java.awt.Color(229, 234, 239));
 
-        tNISN.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tNISN.setForeground(new java.awt.Color(114, 114, 114));
-        tNISN.setText("NISN");
-        tNISN.setPreferredSize(new java.awt.Dimension(71, 35));
-        tNISN.addFocusListener(new java.awt.event.FocusAdapter() {
+        tIDSiswa.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
+        tIDSiswa.setForeground(new java.awt.Color(114, 114, 114));
+        tIDSiswa.setPreferredSize(new java.awt.Dimension(71, 35));
+        tIDSiswa.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                tNISNFocusGained(evt);
+                tIDSiswaFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
-                tNISNFocusLost(evt);
+                tIDSiswaFocusLost(evt);
             }
         });
 
@@ -366,6 +406,19 @@ public class tambahSiswa extends javax.swing.JDialog {
         tAlamat.setRows(5);
         jScrollPane1.setViewportView(tAlamat);
 
+        tNISN1.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
+        tNISN1.setForeground(new java.awt.Color(114, 114, 114));
+        tNISN1.setText("NISN");
+        tNISN1.setPreferredSize(new java.awt.Dimension(71, 35));
+        tNISN1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tNISN1FocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tNISN1FocusLost(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
@@ -378,14 +431,17 @@ public class tambahSiswa extends javax.swing.JDialog {
                     .addComponent(cbKelas, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(tTelepon, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
-                    .addComponent(tNISN, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(tIDSiswa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tNISN1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(tNISN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addComponent(tIDSiswa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addComponent(tNISN1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(tNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -398,7 +454,7 @@ public class tambahSiswa extends javax.swing.JDialog {
                 .addComponent(tTelepon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(cbKelas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addGap(19, 19, 19))
         );
 
         jPanel4.setBackground(new java.awt.Color(229, 234, 239));
@@ -446,18 +502,19 @@ public class tambahSiswa extends javax.swing.JDialog {
                 .addGap(20, 20, 20)
                 .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 17, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -467,7 +524,7 @@ public class tambahSiswa extends javax.swing.JDialog {
             .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(1, 1, 1)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 466, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -503,23 +560,21 @@ public class tambahSiswa extends javax.swing.JDialog {
                 .addGroup(panelUtamaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lClose, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(panelUtama, javax.swing.GroupLayout.PREFERRED_SIZE, 540, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(panelUtama, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelUtama, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelUtama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
-        setBounds(0, 0, 540, 661);
+        setBounds(0, 0, 537, 724);
     }// </editor-fold>//GEN-END:initComponents
 
     private void lCloseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lCloseMouseClicked
@@ -528,13 +583,13 @@ public class tambahSiswa extends javax.swing.JDialog {
     }//GEN-LAST:event_lCloseMouseClicked
 
     //Memberi fokus gained agar tulisan di text field kosong saat di klik
-    private void tNISNFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tNISNFocusGained
+    private void tIDSiswaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tIDSiswaFocusGained
         // TODO add your handling code here:
-        String nisn = tNISN.getText();
+        String nisn = tIDSiswa.getText();
         if (nisn.equals("NISN")) {
-            tNISN.setText("");
+            tIDSiswa.setText("");
         }
-    }//GEN-LAST:event_tNISNFocusGained
+    }//GEN-LAST:event_tIDSiswaFocusGained
 
     private void tNamaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tNamaFocusGained
         // TODO add your handling code here:
@@ -554,13 +609,13 @@ public class tambahSiswa extends javax.swing.JDialog {
 
     //Memberi fokus lost agar tulisan di text field kosong saat di klik
     //dan kembali lagi jika tidak jadi dinputkan
-    private void tNISNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tNISNFocusLost
+    private void tIDSiswaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tIDSiswaFocusLost
         // TODO add your handling code here:
-        String nisn = tNISN.getText();
+        String nisn = tIDSiswa.getText();
         if (nisn.equals("") || nisn.equals("NISN")) {
-            tNISN.setText("NISN");
+            tIDSiswa.setText("NISN");
         }
-    }//GEN-LAST:event_tNISNFocusLost
+    }//GEN-LAST:event_tIDSiswaFocusLost
 
     private void tNamaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tNamaFocusLost
         // TODO add your handling code here:
@@ -580,48 +635,50 @@ public class tambahSiswa extends javax.swing.JDialog {
 
     private void bSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSimpanActionPerformed
         // TODO add your handling code here:
+        String ID = tIDSiswa.getText();
+        String nis = tNISN1.getText();
+        String nama = tNama.getText();
+        String jk = cbJK.getSelectedItem().toString();
+
+        String j_k = null;
+
+        switch (jk) {
+            case "Laki-Laki":
+                j_k = "L";
+                break;
+            case "Perempuan":
+                j_k = "P";
+                break;
+        }
+
+        String alamat = tAlamat.getText();
+        String hp = tTelepon.getText();
+        
+        if (cbKelas.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(null, "Kelas harus dipilih!");
+            return;
+        }
+        String kelas = idKelas(cbKelas.getSelectedItem().toString());
+
+        java.util.Date tanggal = jTGL.getDate();
+
+        java.sql.Date tgl = new java.sql.Date(tanggal.getTime());
+
         try {
+            String sql = "INSERT INTO siswa(id_siswa, nisn, nama_siswa, jenis_kelamin, tgl_lahir, alamat, no_telepon, id_kelas)"
+                    + " VALUES(?,?,?,?,?,?,?,?)";
 
             Connection conn = Koneksi.konek();
+            PreparedStatement ps = conn.prepareStatement(sql);
 
-            String nis = tNISN.getText();
-            String nama = tNama.getText();
-            String jk = cbJK.getSelectedItem().toString();
-
-            String j_k = null;
-
-            switch (jk) {
-                case "Laki-Laki":
-                    j_k = "L";
-                    break;
-                case "Perempuan":
-                    j_k = "P";
-                    break;
-            }
-
-            String alamat = tAlamat.getText();
-            String hp = tTelepon.getText();
-            String kelas = idKelas(cbKelas.getSelectedItem().toString());
-
-            java.util.Date tanggal = jTGL.getDate();
-
-            java.sql.Date tgl
-                    = new java.sql.Date(tanggal.getTime());
-
-            String sql
-                    = "INSERT INTO siswa(nisn, nama_siswa, jenis_kelamin, tgl_lahir, alamat, no_telepon, id_kelas)"
-                    + " VALUES(?,?,?,?,?,?,?)";
-
-            PreparedStatement ps
-                    = conn.prepareStatement(sql);
-
-            ps.setString(1, nis);
-            ps.setString(2, nama);
-            ps.setString(3, j_k);
-            ps.setDate(4, tgl);
-            ps.setString(5, alamat);
-            ps.setString(6, hp);
-            ps.setString(7, kelas);
+            ps.setString(1, ID);
+            ps.setString(2, nis);
+            ps.setString(3, nama);
+            ps.setString(4, j_k);
+            ps.setDate(5, tgl);
+            ps.setString(6, alamat);
+            ps.setString(7, hp);
+            ps.setString(8, kelas);
 
             ps.executeUpdate();
 
@@ -646,6 +703,22 @@ public class tambahSiswa extends javax.swing.JDialog {
         // TODO add your handling code here:
         dispose();
     }//GEN-LAST:event_bBatalActionPerformed
+
+    private void tNISN1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tNISN1FocusGained
+        // TODO add your handling code here:
+        String nisn = tNISN1.getText();
+        if (nisn.equals("NISN")) {
+            tNISN1.setText("");
+        }
+    }//GEN-LAST:event_tNISN1FocusGained
+
+    private void tNISN1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tNISN1FocusLost
+        // TODO add your handling code here:
+        String nisn = tNISN1.getText();
+        if (nisn.equals("") || nisn.equals("NISN")) {
+            tNISN1.setText("NISN");
+        }
+    }//GEN-LAST:event_tNISN1FocusLost
 
     /**
      * @param args the command line arguments
@@ -697,6 +770,7 @@ public class tambahSiswa extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
@@ -709,7 +783,8 @@ public class tambahSiswa extends javax.swing.JDialog {
     private javax.swing.JLabel lClose;
     private javax.swing.JPanel panelUtama;
     private javax.swing.JTextArea tAlamat;
-    private javax.swing.JTextField tNISN;
+    private javax.swing.JTextField tIDSiswa;
+    private javax.swing.JTextField tNISN1;
     private javax.swing.JTextField tNama;
     private javax.swing.JTextField tTelepon;
     // End of variables declaration//GEN-END:variables

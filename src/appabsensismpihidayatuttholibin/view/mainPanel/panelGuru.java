@@ -36,6 +36,7 @@ import javax.swing.table.DefaultTableModel;
 public class panelGuru extends javax.swing.JPanel {
 
     // Menyimpan data guru yang dipilih pada tabel.
+    private String idDipilih;
     private String nipDipilih;
     private String namaDipilih;
     private String jkDipilih;
@@ -55,10 +56,10 @@ public class panelGuru extends javax.swing.JPanel {
 
     //custom untuk header tabel
     private void customTable() {
-        tblGuru.setRowHeight(40);// Mengatur tinggi setiap baris tabel.
+        tblGuru.setRowHeight(45);// Mengatur tinggi setiap baris tabel.
 
         JTableHeader header = tblGuru.getTableHeader();
-        header.setPreferredSize(new Dimension(100, 40));// Mengatur tinggi header.
+        header.setPreferredSize(new Dimension(100, 45));// Mengatur tinggi header.
 
         header.setDefaultRenderer(new DefaultTableCellRenderer() {
             @Override
@@ -99,16 +100,17 @@ public class panelGuru extends javax.swing.JPanel {
         DefaultTableModel model = new DefaultTableModel();
 
         //Menambahkan kolom ke dalam model table
+        model.addColumn("ID Guru");
         model.addColumn("NIP/NIY");
         model.addColumn("Nama Guru");
-        model.addColumn("L/P");
+        model.addColumn("Jenis Kelamin");
         model.addColumn("Tanggal Lahir");
         model.addColumn("Alamat");
         model.addColumn("No Telepon");
 
         try {
             //Query SQL untuk mengambil semua data dari tabel guru
-            String sql = "SELECT nip, nama_guru, jenis_kelamin, alamat, tgl_lahir, no_telepon FROM guru";
+            String sql = "SELECT id_guru, nip, nama_guru, jenis_kelamin, alamat, tgl_lahir, no_telepon FROM guru";
 
             //Membuka koneksi ke database
             Connection conn = Koneksi.konek();
@@ -122,6 +124,7 @@ public class panelGuru extends javax.swing.JPanel {
             //melakukan iterasi untuk setiap baris data hasil query
             while (rs.next()) {
                 //mengambil nilai dari masing" kolom
+                String ID = rs.getString("id_guru");
                 String NIP = rs.getString("nip");
                 String namaGuru = rs.getString("nama_guru");
                 String JK = rs.getString("jenis_kelamin");
@@ -130,7 +133,7 @@ public class panelGuru extends javax.swing.JPanel {
                 String no = rs.getString("no_telepon");
 
                 //menyusun data kedalam array objek
-                Object[] baris = {NIP, namaGuru, JK, tanggal, alamat, no};
+                Object[] baris = {ID, NIP, namaGuru, JK, tanggal, alamat, no};
 
                 //menambahkan array baris ke dalam model table
                 model.addRow(baris);
@@ -384,14 +387,15 @@ public class panelGuru extends javax.swing.JPanel {
         int barisYangDipilih = tblGuru.rowAtPoint(evt.getPoint());
 
         // Mengambil data utama dari baris yang dipilih.
-        nipDipilih = tblGuru.getValueAt(barisYangDipilih, 0).toString();
-        namaDipilih = tblGuru.getValueAt(barisYangDipilih, 1).toString();
+        idDipilih = tblGuru.getValueAt(barisYangDipilih, 0).toString();
+        nipDipilih = tblGuru.getValueAt(barisYangDipilih, 1).toString();
+        namaDipilih = tblGuru.getValueAt(barisYangDipilih, 2).toString();
 
         // Mengambil data lainnya dari tabel.
-        Object jkObj = tblGuru.getValueAt(barisYangDipilih, 2);
-        Object tglObj = tblGuru.getValueAt(barisYangDipilih, 3);
-        Object alamatObj = tblGuru.getValueAt(barisYangDipilih, 4);
-        Object hpObj = tblGuru.getValueAt(barisYangDipilih, 5);
+        Object jkObj = tblGuru.getValueAt(barisYangDipilih, 3);
+        Object tglObj = tblGuru.getValueAt(barisYangDipilih, 4);
+        Object alamatObj = tblGuru.getValueAt(barisYangDipilih, 5);
+        Object hpObj = tblGuru.getValueAt(barisYangDipilih, 6);
 
         // Menghindari nilai null pada data yang dipilih.
         jkDipilih = (jkObj != null) ? jkObj.toString() : "";
@@ -403,7 +407,7 @@ public class panelGuru extends javax.swing.JPanel {
     private void BtnUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnUbahActionPerformed
         // TODO add your handling code here:
         // Memastikan pengguna telah memilih data guru.
-        if (nipDipilih == null) {
+        if (idDipilih == null) {
             JOptionPane.showMessageDialog(this, "Silakan pilih terlebih dahulu");
             return;
         }
@@ -417,6 +421,7 @@ public class panelGuru extends javax.swing.JPanel {
 
         // Mengirim data guru yang dipilih ke dialog.
         dialog.setDataGuru(
+                idDipilih, 
                 nipDipilih,
                 namaDipilih,
                 jkDipilih,
@@ -431,7 +436,7 @@ public class panelGuru extends javax.swing.JPanel {
     private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnHapusActionPerformed
         // TODO add your handling code here:  
         // Memastikan data guru telah dipilih.
-        if (nipDipilih.isEmpty()) {
+        if (idDipilih.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Pilih data yang akan dihapus");
             return;
         }

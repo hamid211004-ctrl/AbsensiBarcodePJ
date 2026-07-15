@@ -46,11 +46,20 @@ public class tambahGuru extends javax.swing.JDialog {
         borderLengkung(panelUtama, "#828282");
 
         this.pG = pG;
+        
+        generateIdGuru();
+
+        tID.setEditable(false);
+        tID.setFocusable(false);
+
+        java.awt.EventQueue.invokeLater(() -> {
+            tNIP1.requestFocusInWindow();
+        });
     }
     
     // membuat method bersih untuk tcari yang apabila diklik tulisan akan hilang
     void bersih(){
-        tNIP.setText("NIP/NIY");
+        tNIP1.setText("NIP/NIY");
         tNama.setText("Nama Guru");
         tTelepon.setText("No Telepon");
     }
@@ -63,6 +72,28 @@ public class tambahGuru extends javax.swing.JDialog {
                 2f,
                 20
         ));
+    }
+    
+    private void generateIdGuru() {
+        try {
+            Connection conn = Koneksi.konek();
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery("SELECT id_guru FROM guru ORDER BY id_guru DESC LIMIT 1");
+
+            if (rs.next()) {
+                //ambil angka setelah ABS
+                String id = rs.getString("id_guru").substring(3);
+                int no = Integer.parseInt(id) + 1;
+
+                tID.setText(String.format("GRU%03d", no));
+            } else {
+                tID.setText("GRU001");
+            }
+            rs.close();
+            st.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Gagal generate ID : " + e.getMessage());
+        }
     }
     
 
@@ -87,14 +118,16 @@ public class tambahGuru extends javax.swing.JDialog {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
-        tNIP = new javax.swing.JTextField();
+        tID = new javax.swing.JTextField();
         tNama = new javax.swing.JTextField();
         cbJK = new javax.swing.JComboBox<>();
         tTanggal = new com.toedter.calendar.JDateChooser();
-        tTelepon = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tAlamat = new javax.swing.JTextArea();
+        tTelepon = new javax.swing.JTextField();
+        tNIP1 = new javax.swing.JTextField();
         lClose = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jPanel8 = new javax.swing.JPanel();
@@ -140,7 +173,7 @@ public class tambahGuru extends javax.swing.JDialog {
 
         jLabel1.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel1.setText("NIP/NIY");
+        jLabel1.setText("ID Guru");
         jLabel1.setPreferredSize(new java.awt.Dimension(37, 35));
 
         jLabel2.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
@@ -168,22 +201,30 @@ public class tambahGuru extends javax.swing.JDialog {
         jLabel6.setText("No Telepon");
         jLabel6.setPreferredSize(new java.awt.Dimension(37, 35));
 
+        jLabel8.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel8.setText("NIP/NIY");
+        jLabel8.setPreferredSize(new java.awt.Dimension(37, 35));
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -193,24 +234,35 @@ public class tambahGuru extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(86, 86, 86)
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         jPanel7.setBackground(new java.awt.Color(229, 234, 239));
 
-        tNIP.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tNIP.setForeground(new java.awt.Color(114, 114, 114));
-        tNIP.setText("NIP/NIY");
-        tNIP.setPreferredSize(new java.awt.Dimension(71, 35));
-        tNIP.addFocusListener(new java.awt.event.FocusAdapter() {
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 459, Short.MAX_VALUE)
+        );
+
+        tID.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
+        tID.setForeground(new java.awt.Color(114, 114, 114));
+        tID.setPreferredSize(new java.awt.Dimension(71, 35));
+        tID.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                tNIPFocusGained(evt);
+                tIDFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
-                tNIPFocusLost(evt);
+                tIDFocusLost(evt);
             }
         });
-        tNIP.addActionListener(this::tNIPActionPerformed);
+        tID.addActionListener(this::tIDActionPerformed);
 
         tNama.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
         tNama.setForeground(new java.awt.Color(114, 114, 114));
@@ -237,6 +289,13 @@ public class tambahGuru extends javax.swing.JDialog {
         tTanggal.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
         tTanggal.setPreferredSize(new java.awt.Dimension(85, 35));
 
+        jScrollPane1.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
+
+        tAlamat.setColumns(20);
+        tAlamat.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
+        tAlamat.setRows(5);
+        jScrollPane1.setViewportView(tAlamat);
+
         tTelepon.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
         tTelepon.setForeground(new java.awt.Color(114, 114, 114));
         tTelepon.setText("No Telepon");
@@ -251,59 +310,64 @@ public class tambahGuru extends javax.swing.JDialog {
         });
         tTelepon.addActionListener(this::tTeleponActionPerformed);
 
-        jScrollPane1.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-
-        tAlamat.setColumns(20);
-        tAlamat.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
-        tAlamat.setRows(5);
-        jScrollPane1.setViewportView(tAlamat);
-
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(tNIP, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(tNama, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cbJK, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(tTanggal, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
-                    .addComponent(tTelepon, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addGap(0, 6, Short.MAX_VALUE))
-        );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addComponent(tNIP, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(tNama, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(cbJK, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(tTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(tTelepon, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+        tNIP1.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
+        tNIP1.setForeground(new java.awt.Color(114, 114, 114));
+        tNIP1.setText("NIP/NIY");
+        tNIP1.setPreferredSize(new java.awt.Dimension(71, 35));
+        tNIP1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tNIP1FocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tNIP1FocusLost(evt);
+            }
+        });
+        tNIP1.addActionListener(this::tNIP1ActionPerformed);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(2, 2, 2)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(tID, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tNama, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cbJK, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tTanggal, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tTelepon, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tNIP1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(tID, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(tNIP1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(tNama, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(cbJK, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(tTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(tTelepon, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())))
         );
 
         jPanel1.add(jPanel5, java.awt.BorderLayout.CENTER);
@@ -402,13 +466,13 @@ public class tambahGuru extends javax.swing.JDialog {
 
     
     //Memberi fokus gained agar tulisan di text field kosong saat di klik
-    private void tNIPFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tNIPFocusGained
+    private void tIDFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tIDFocusGained
         // TODO add your handling code here:
-        String NIP = tNIP.getText();
+        String NIP = tNIP1.getText();
         if(NIP.equals("NIP/NIY")){
-            tNIP.setText("");
+            tNIP1.setText("");
         }
-    }//GEN-LAST:event_tNIPFocusGained
+    }//GEN-LAST:event_tIDFocusGained
 
     private void tNamaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tNamaFocusGained
         // TODO add your handling code here:
@@ -429,13 +493,13 @@ public class tambahGuru extends javax.swing.JDialog {
     
     //Memberi fokus lost agar tulisan di text field kosong saat di klik
     //dan kembali lagi jika tidak jadi dinputkan
-    private void tNIPFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tNIPFocusLost
+    private void tIDFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tIDFocusLost
         // TODO add your handling code here:
-        String NIP = tNIP.getText();
+        String NIP = tNIP1.getText();
         if(NIP.equals("")||NIP.equals("NIP/NIY")){
-            tNIP.setText("NIP/NIY");
+            tNIP1.setText("NIP/NIY");
         }
-    }//GEN-LAST:event_tNIPFocusLost
+    }//GEN-LAST:event_tIDFocusLost
 
     private void tNamaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tNamaFocusLost
         // TODO add your handling code here:
@@ -456,7 +520,8 @@ public class tambahGuru extends javax.swing.JDialog {
     private void bSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSimpanActionPerformed
         // TODO add your handling code here:
         //Ambil input dari text field dan combo box pada GUI
-        String NIP = tNIP.getText();
+        String idGuru = tID.getText();
+        String NIP = tNIP1.getText();
         String namaGuru = tNama.getText();
         String JK = cbJK.getSelectedItem().toString();
         Date tanggalLahir = tTanggal.getDate();
@@ -484,7 +549,7 @@ public class tambahGuru extends javax.swing.JDialog {
         
         try {
             //Query SQL untuk menyisipkan data ke tabel guru
-            String sql = "INSERT INTO guru(nip, nama_guru, jenis_kelamin, tgl_lahir,alamat, no_telepon) VALUES(?,?,?,?,?,?)";
+            String sql = "INSERT INTO guru(id_guru, nip, nama_guru, jenis_kelamin, tgl_lahir, alamat, no_telepon) VALUES(?,?,?,?,?,?,?)";
 
             //Buat koneksi ke database menggunakan method koneksi() dari class koneksi
             Connection conn = Koneksi.konek();
@@ -493,12 +558,13 @@ public class tambahGuru extends javax.swing.JDialog {
             PreparedStatement ps = conn.prepareStatement(sql);
 
             //isi parameter
-            ps.setString(1, NIP);
-            ps.setString(2, namaGuru);
-            ps.setString(3, j_k);
-            ps.setString(4, tglLahir);
-            ps.setString(5, alamat);
-            ps.setString(6, no);
+            ps.setString(1, idGuru);
+            ps.setString(2, NIP);
+            ps.setString(3, namaGuru);
+            ps.setString(4, j_k);
+            ps.setString(5, tglLahir);
+            ps.setString(6, alamat);
+            ps.setString(7, no);
 
             //Jalankan query untuk menyimpan data ke database
             ps.executeUpdate();
@@ -519,10 +585,10 @@ public class tambahGuru extends javax.swing.JDialog {
         dispose();
     }//GEN-LAST:event_bBatalActionPerformed
 
-    private void tNIPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tNIPActionPerformed
+    private void tIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tIDActionPerformed
         // TODO add your handling code here:
         tNama.requestFocus();
-    }//GEN-LAST:event_tNIPActionPerformed
+    }//GEN-LAST:event_tIDActionPerformed
 
     private void tNamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tNamaActionPerformed
         // TODO add your handling code here:
@@ -536,6 +602,26 @@ public class tambahGuru extends javax.swing.JDialog {
         // TODO add your handling code here:
         bSimpan.doClick();
     }//GEN-LAST:event_tTeleponActionPerformed
+
+    private void tNIP1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tNIP1FocusGained
+        // TODO add your handling code here:
+        String NIP = tNIP1.getText();
+        if(NIP.equals("NIP/NIY")){
+            tNIP1.setText("");
+        }
+    }//GEN-LAST:event_tNIP1FocusGained
+
+    private void tNIP1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tNIP1FocusLost
+        // TODO add your handling code here:
+        String NIP = tNIP1.getText();
+        if(NIP.equals("")||NIP.equals("NIP/NIY")){
+            tNIP1.setText("NIP/NIY");
+        }
+    }//GEN-LAST:event_tNIP1FocusLost
+
+    private void tNIP1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tNIP1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tNIP1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -585,6 +671,7 @@ public class tambahGuru extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
@@ -596,7 +683,8 @@ public class tambahGuru extends javax.swing.JDialog {
     private javax.swing.JLabel lClose;
     private javax.swing.JPanel panelUtama;
     private javax.swing.JTextArea tAlamat;
-    private javax.swing.JTextField tNIP;
+    private javax.swing.JTextField tID;
+    private javax.swing.JTextField tNIP1;
     private javax.swing.JTextField tNama;
     private com.toedter.calendar.JDateChooser tTanggal;
     private javax.swing.JTextField tTelepon;
