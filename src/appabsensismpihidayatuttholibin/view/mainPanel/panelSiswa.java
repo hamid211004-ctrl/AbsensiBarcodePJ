@@ -32,6 +32,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class panelSiswa extends javax.swing.JPanel {
 
+    // Variabel untuk menyimpan data siswa yang dipilih pada tabel.
     private String idDipilih;
     private String nisnDipilih;
     private String namaSiswaDipilih;
@@ -46,9 +47,11 @@ public class panelSiswa extends javax.swing.JPanel {
      */
     public panelSiswa() {
         initComponents();
-        customTable();
 
-        load_table_siswa();
+        customTable(); // Mengatur tampilan tabel agar lebih rapi.
+
+        load_table_siswa(""); // Menampilkan seluruh data siswa ke dalam tabel.
+
     }
 
     //custom untuk header tabel
@@ -88,11 +91,14 @@ public class panelSiswa extends javax.swing.JPanel {
         dialog.setVisible(true);
     }
 
-    public void load_table_siswa() {
-        //membuat objek model tabel baru
+    // Method untuk mengambil data siswa dari database
+    // kemudian menampilkannya ke dalam JTable.
+    public void load_table_siswa(String keyword) {
+
+        // Membuat model tabel baru.
         DefaultTableModel model = new DefaultTableModel();
 
-        //menambahkan kolom ke dalam model table
+        // Menambahkan nama kolom pada tabel.
         model.addColumn("ID Siswa");
         model.addColumn("NIS");
         model.addColumn("Nama Siswa");
@@ -103,22 +109,38 @@ public class panelSiswa extends javax.swing.JPanel {
         model.addColumn("Kelas");
 
         try {
-            //Query SQL untuk mengambil data dari tabel siswa
-            String sql = "SELECT s.id_siswa, s.nisn, s.nama_siswa, s.jenis_kelamin, s.tgl_lahir, s.alamat, s.no_telepon, k.nama_kelas "
-                    + "FROM siswa s "
-                    + "LEFT JOIN kelas k ON s.id_kelas = k.id_kelas";
 
-            //membuka koneksi ke database
+            // Query SQL untuk mengambil data siswa beserta nama kelas.
+            // Data juga dapat dicari berdasarkan NIS, nama siswa, atau nama kelas.
+            String sql = "SELECT s.id_siswa, s.nisn, s.nama_siswa, s.jenis_kelamin, "
+                    + "s.tgl_lahir, s.alamat, s.no_telepon, k.nama_kelas "
+                    + "FROM siswa s "
+                    + "LEFT JOIN kelas k ON s.id_kelas = k.id_kelas "
+                    + "WHERE s.nisn LIKE ? "
+                    + "OR s.nama_siswa LIKE ? "
+                    + "OR k.nama_kelas LIKE ?";
+
+            // Membuka koneksi ke database.
             Connection conn = Koneksi.konek();
 
-            //membuat setatement untuk menajalankan query
-            Statement st = conn.createStatement();
+            // Menyiapkan query SQL yang memiliki parameter.
+            PreparedStatement ps = conn.prepareStatement(sql);
 
-            //menjalankan query dan menyimpan hasilnya dalam Resultset
-            ResultSet rs = st.executeQuery(sql);
-            //melakukan iterasi untuk setiap baris data hasil query
+            // Menambahkan karakter '%' agar pencarian menggunakan LIKE.
+            String cari = "%" + keyword + "%";
+
+            // Mengisi parameter pencarian pada query.
+            ps.setString(1, cari);
+            ps.setString(2, cari);
+            ps.setString(3, cari);
+
+            // Menjalankan query.
+            ResultSet rs = ps.executeQuery();
+
+            // Mengambil setiap data hasil query.
             while (rs.next()) {
-                //mengambil nilai dari masing masing kolom
+
+                // Mengambil data dari setiap kolom.
                 String ID = rs.getString("id_siswa");
                 String NIS = rs.getString("nisn");
                 String NamaSiswa = rs.getString("nama_siswa");
@@ -126,19 +148,32 @@ public class panelSiswa extends javax.swing.JPanel {
                 String tglLahir = rs.getString("tgl_lahir");
                 String alamat = rs.getString("alamat");
                 String NoTelp = rs.getString("no_telepon");
-                String namaKelas = rs.getString("nama_kelas");  //tambahann!!!
+                String namaKelas = rs.getString("nama_kelas");
 
-                //menyusun data kedalam array objek
-                Object[] baris = {ID, NIS, NamaSiswa, JK, tglLahir, alamat, NoTelp, namaKelas};
+                // Menyimpan data ke dalam satu baris.
+                Object[] baris = {
+                    ID,
+                    NIS,
+                    NamaSiswa,
+                    JK,
+                    tglLahir,
+                    alamat,
+                    NoTelp,
+                    namaKelas
+                };
 
-                //menambahkanarray baris ke dalam model tabel
+                // Menambahkan baris data ke model tabel.
                 model.addRow(baris);
             }
+
         } catch (SQLException sQLException) {
-            //menampilkan pesan error jika gagal mengambil data dari database
+
+            // Menampilkan pesan jika terjadi kesalahan saat mengambil data.
             JOptionPane.showMessageDialog(null, "Gagal mengambil data!!");
         }
-        //menampilkan model yang sudah diisi ke dalam tabel GUI
+
+        // Menampilkan seluruh data yang sudah dimasukkan ke model
+        // ke dalam komponen JTable.
         tblSiswa.setModel(model);
     }
 
@@ -162,6 +197,7 @@ public class panelSiswa extends javax.swing.JPanel {
         BtnTambah = new javax.swing.JButton();
         BtnUbah = new javax.swing.JButton();
         BtnHapus = new javax.swing.JButton();
+        tCari = new javax.swing.JTextField();
         jPanel7 = new javax.swing.JPanel();
         jPanel11 = new javax.swing.JPanel();
         jPanel12 = new javax.swing.JPanel();
@@ -266,17 +302,36 @@ public class panelSiswa extends javax.swing.JPanel {
         BtnHapus.addActionListener(this::BtnHapusActionPerformed);
         jPanel6.add(BtnHapus);
 
+        tCari.setFont(new java.awt.Font("Poppins", 0, 16)); // NOI18N
+        tCari.setText("Cari");
+        tCari.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tCariFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tCariFocusLost(evt);
+            }
+        });
+        tCari.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tCariKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelAtasLayout = new javax.swing.GroupLayout(panelAtas);
         panelAtas.setLayout(panelAtasLayout);
         panelAtasLayout.setHorizontalGroup(
             panelAtasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelAtasLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelAtasLayout.createSequentialGroup()
-                .addContainerGap(848, Short.MAX_VALUE)
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 436, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelAtasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelAtasLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1))
+                    .addGroup(panelAtasLayout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addComponent(tCari, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 450, Short.MAX_VALUE)
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         panelAtasLayout.setVerticalGroup(
@@ -284,8 +339,10 @@ public class panelSiswa extends javax.swing.JPanel {
             .addGroup(panelAtasLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addGap(21, 21, 21)
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(panelAtasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tCari, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12))
         );
 
@@ -378,19 +435,22 @@ public class panelSiswa extends javax.swing.JPanel {
 
     private void tblSiswaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSiswaMouseClicked
         // TODO add your handling code here:
+        // Mengambil indeks baris yang dipilih pada tabel.
         int barisYangDipilih = tblSiswa.rowAtPoint(evt.getPoint());
 
-        //ambil nilai baris yang dipilih
+        // Mengambil data utama dari baris yang dipilih.
         idDipilih = tblSiswa.getValueAt(barisYangDipilih, 0).toString();
         nisnDipilih = tblSiswa.getValueAt(barisYangDipilih, 1).toString();
         namaSiswaDipilih = tblSiswa.getValueAt(barisYangDipilih, 2).toString();
 
+        // Mengambil data lainnya dari tabel.
         Object jkobj = tblSiswa.getValueAt(barisYangDipilih, 3);
         Object tglobj = tblSiswa.getValueAt(barisYangDipilih, 4);
         Object alamatobj = tblSiswa.getValueAt(barisYangDipilih, 5);
         Object hpobj = tblSiswa.getValueAt(barisYangDipilih, 6);
         Object kelasObj = tblSiswa.getValueAt(barisYangDipilih, 7);
 
+        // Mengecek apakah data bernilai null sebelum disimpan ke variabel.
         IdKelasDipilih = (kelasObj != null) ? kelasObj.toString() : "";
         JKDipilih = (jkobj != null) ? jkobj.toString() : "";
         tglLahirpilih = (tglobj != null) ? tglobj.toString() : "";
@@ -400,18 +460,22 @@ public class panelSiswa extends javax.swing.JPanel {
 
     private void BtnUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnUbahActionPerformed
         // TODO add your handling code here:
+        // Memastikan pengguna sudah memilih data yang akan diubah.
         if (idDipilih == null) {
             JOptionPane.showMessageDialog(this, "Silahkan pilih terlebih dahulu");
             return;
         }
+
+        // Membuat dialog ubah siswa.
         ubahSiswa dialog = new ubahSiswa(
                 (java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(this),
                 true,
                 this
         );
 
+        // Mengirim data siswa yang dipilih ke form ubah.
         dialog.setDataSiswa(
-                idDipilih, 
+                idDipilih,
                 nisnDipilih,
                 namaSiswaDipilih,
                 JKDipilih,
@@ -420,19 +484,25 @@ public class panelSiswa extends javax.swing.JPanel {
                 NoTelpDipilih,
                 IdKelasDipilih
         );
+
+        // Menampilkan dialog di tengah panel.
         dialog.setLocationRelativeTo(this);
+
+        // Menampilkan form ubah siswa.
         dialog.setVisible(true);
     }//GEN-LAST:event_BtnUbahActionPerformed
 
     private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnHapusActionPerformed
         // TODO add your handling code here:
-        // Memastikan data siswa telah dipilih.
+        // Memastikan pengguna sudah memilih data siswa.
         if (idDipilih == null) {
-            JOptionPane.showMessageDialog(this,
+            JOptionPane.showMessageDialog(
+                    this,
                     "Silakan pilih data siswa terlebih dahulu.");
             return;
         }
 
+        // Menampilkan konfirmasi sebelum data dihapus.
         int konfirmasi = JOptionPane.showConfirmDialog(
                 this,
                 "Yakin ingin menghapus data siswa ini?",
@@ -443,28 +513,32 @@ public class panelSiswa extends javax.swing.JPanel {
 
             try {
 
+                // Membuka koneksi ke database.
                 Connection conn = Koneksi.konek();
 
-                // Hapus data absensi siswa terlebih dahulu
+                // Menghapus data absensi yang dimiliki siswa terlebih dahulu.
                 String sqlAbsensi = "DELETE FROM absensi WHERE id_siswa=?";
                 PreparedStatement ps1 = conn.prepareStatement(sqlAbsensi);
                 ps1.setString(1, idDipilih);
                 ps1.executeUpdate();
 
-                // Hapus data siswa
+                // Menghapus data siswa dari tabel siswa.
                 String sqlSiswa = "DELETE FROM siswa WHERE id_siswa=?";
                 PreparedStatement ps2 = conn.prepareStatement(sqlSiswa);
                 ps2.setString(1, idDipilih);
                 ps2.executeUpdate();
 
+                // Menampilkan pesan jika data berhasil dihapus.
                 JOptionPane.showMessageDialog(this,
                         "Data berhasil dihapus.");
 
-                load_table_siswa();
+                // Memuat kembali data siswa agar tabel diperbarui.
+                load_table_siswa("");
 
-                tblSiswa.clearSelection(); //Supaya setelah data dihapus, baris yang sebelumnya dipilih tidak tetap terlihat terseleksi di tabel.
+                // Menghilangkan baris yang masih terseleksi pada tabel.
+                tblSiswa.clearSelection();
 
-                // Reset variabel setelah berhasil dihapus
+                // Mengosongkan kembali variabel yang menyimpan data siswa.
                 idDipilih = null;
                 nisnDipilih = null;
                 namaSiswaDipilih = null;
@@ -476,13 +550,36 @@ public class panelSiswa extends javax.swing.JPanel {
 
             } catch (SQLException e) {
 
-                JOptionPane.showMessageDialog(this,
+                // Menampilkan pesan jika proses penghapusan gagal.
+                JOptionPane.showMessageDialog(
+                        this,
                         "Gagal menghapus data!\n" + e.getMessage());
 
             }
 
         }
     }//GEN-LAST:event_BtnHapusActionPerformed
+
+    private void tCariFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tCariFocusGained
+        // TODO add your handling code here:
+        String cari = tCari.getText();
+        if (cari.equals("Cari")) {
+            tCari.setText("");
+        }
+    }//GEN-LAST:event_tCariFocusGained
+
+    private void tCariFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tCariFocusLost
+        // TODO add your handling code here:
+        String cari = tCari.getText();
+        if (cari.equals("Cari")) {
+            tCari.setText("");
+        }
+    }//GEN-LAST:event_tCariFocusLost
+
+    private void tCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tCariKeyReleased
+        // TODO add your handling code here:
+        load_table_siswa(tCari.getText());
+    }//GEN-LAST:event_tCariKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -502,6 +599,7 @@ public class panelSiswa extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel panelAtas;
+    private javax.swing.JTextField tCari;
     private javax.swing.JTable tblSiswa;
     // End of variables declaration//GEN-END:variables
 }

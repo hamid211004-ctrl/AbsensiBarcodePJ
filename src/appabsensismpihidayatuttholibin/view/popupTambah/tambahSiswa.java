@@ -36,6 +36,7 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 public class tambahSiswa extends javax.swing.JDialog {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(tambahSiswa.class.getName());
+    // Menyimpan referensi panel siswa agar data dapat diperbarui setelah disimpan.
     private panelSiswa pS;
 
     /**
@@ -45,23 +46,30 @@ public class tambahSiswa extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
 
-        //supaya JDialognya tranparan jadi roundnya jadi kelihatan dehh
+        // Membuat background JDialog transparan agar sudut panel yang membulat terlihat.
         this.setBackground(new Color(0, 0, 0, 0));
+
         if (this.getContentPane() instanceof javax.swing.JComponent) {
             ((javax.swing.JComponent) this.getContentPane()).setOpaque(false);
         }
 
+        // Memberikan border membulat pada panel utama.
         borderLengkung(panelUtama, "#828282");
 
+        // Menyimpan objek panel siswa.
         this.pS = pS;
 
+        // Memuat data kelas ke ComboBox.
         loadComboKelass();
 
+        // Membuat ID siswa secara otomatis.
         generateIdSiswa();
 
+        // ID siswa hanya ditampilkan dan tidak dapat diubah oleh pengguna.
         tIDSiswa.setEditable(false);
         tIDSiswa.setFocusable(false);
 
+        // Memberikan fokus awal ke field NISN.
         java.awt.EventQueue.invokeLater(() -> {
             tNISN1.requestFocusInWindow();
         });
@@ -76,17 +84,25 @@ public class tambahSiswa extends javax.swing.JDialog {
         ));
     }
 
+    // Method untuk mengambil data kelas dari database
+    // kemudian menampilkannya pada ComboBox.
     void loadComboKelass() {
+
         try {
 
+            // Query untuk mengambil seluruh data kelas.
             String sql = "SELECT * FROM kelas";
 
+            // Membuka koneksi ke database.
             Connection conn = Koneksi.konek();
 
+            // Membuat statement SQL.
             Statement statement = conn.createStatement();
 
+            // Menjalankan query.
             ResultSet resultSet = statement.executeQuery(sql);
 
+            // Menambahkan nama kelas ke dalam ComboBox.
             while (resultSet.next()) {
                 cbKelas.addItem(resultSet.getString("nama_kelas"));
             }
@@ -94,101 +110,147 @@ public class tambahSiswa extends javax.swing.JDialog {
         } catch (SQLException e) {
 
         }
+
+        // Mengosongkan pilihan awal ComboBox.
         cbKelas.setSelectedItem(null);
     }
 
+    // Method untuk mendapatkan ID kelas berdasarkan nama kelas.
     String idKelas(String namaKelas) {
-        try {
-            //query dengan paramenter untuk mencari guru berdasarkan nama 
-            String sql = "SELECT * FROM kelas WHERE nama_kelas = ?";
-            //membuka koneksi ke database 
-            Connection conn = Koneksi.konek();
-            //siapkan preparedStatement 
-            PreparedStatement ps = conn.prepareStatement(sql);
-            //isi paramenter query dengan nama jurusan 
-            ps.setString(1, namaKelas
-            );
 
-            //menjalankan query dan menyimpan hasilnya dalam resultSet 
+        try {
+
+            // Query untuk mencari ID kelas berdasarkan nama kelas.
+            String sql = "SELECT * FROM kelas WHERE nama_kelas = ?";
+
+            // Membuka koneksi ke database.
+            Connection conn = Koneksi.konek();
+
+            // Menyiapkan PreparedStatement.
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            // Mengisi parameter nama kelas.
+            ps.setString(1, namaKelas);
+
+            // Menjalankan query.
             ResultSet rs = ps.executeQuery();
 
-            //jika data ditemukan, kembalikan NIP guru 
+            // Mengembalikan ID kelas jika data ditemukan.
             while (rs.next()) {
                 return rs.getString("id_kelas");
             }
+
         } catch (SQLException e) {
-            //jika error, kembalikan string kosong 
+
+            // Mengembalikan string kosong jika terjadi kesalahan.
             return "";
+
         }
-        //jika tidak ditemukan, kembalikan string kosong 
+
+        // Mengembalikan string kosong jika data tidak ditemukan.
         return "";
     }
 
+    // Method untuk membuat ID siswa secara otomatis.
     private void generateIdSiswa() {
+
         try {
+
+            // Membuka koneksi ke database.
             Connection conn = Koneksi.konek();
+
+            // Membuat statement SQL.
             Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT id_siswa FROM siswa ORDER BY id_siswa DESC LIMIT 1");
+
+            // Mengambil ID siswa terakhir.
+            ResultSet rs = st.executeQuery(
+                    "SELECT id_siswa FROM siswa ORDER BY id_siswa DESC LIMIT 1");
 
             if (rs.next()) {
-                //ambil angka setelah ABS
+
+                // Mengambil bagian angka dari ID siswa.
                 String id = rs.getString("id_siswa").substring(3);
+
+                // Menambah nomor ID sebanyak satu.
                 int no = Integer.parseInt(id) + 1;
 
+                // Membuat ID baru dengan format SWS001, SWS002, dan seterusnya.
                 tIDSiswa.setText(String.format("SWS%03d", no));
+
             } else {
+
+                // Jika belum ada data siswa, maka ID pertama adalah SWS001.
                 tIDSiswa.setText("SWS001");
+
             }
+
+            // Menutup ResultSet dan Statement.
             rs.close();
             st.close();
+
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Gagal generate ID : " + e.getMessage());
+
+            // Menampilkan pesan jika proses pembuatan ID gagal.
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Gagal generate ID : " + e.getMessage());
+
         }
     }
 
+    // Method untuk membuat QR Code siswa berdasarkan NISN.
     private void generateQRCode(String nisn, String nama, String kelas) {
 
         try {
 
+            // Membuka koneksi ke database.
             Connection conn = Koneksi.konek();
 
-            // Folder penyimpanan
+            // Menentukan folder penyimpanan QR Code.
             String folder = "src/QR/";
 
             File dir = new File(folder);
 
+            // Membuat folder jika belum tersedia.
             if (!dir.exists()) {
                 dir.mkdirs();
             }
 
+            // Menentukan lokasi penyimpanan file QR Code.
             String pathQR = folder + nisn + ".png";
 
+            // Membuat QR Code menggunakan NISN sebagai isi QR.
             BitMatrix matrix = new MultiFormatWriter().encode(
                     nisn,
                     BarcodeFormat.QR_CODE,
                     300,
                     300);
 
+            // Menyimpan QR Code dalam bentuk file PNG.
             MatrixToImageWriter.writeToPath(
                     matrix,
                     "PNG",
                     FileSystems.getDefault().getPath(pathQR));
 
-            // Simpan path QR ke database
+            // Query untuk menyimpan lokasi file QR Code ke database.
             String sqlUpdate
                     = "UPDATE siswa SET qr=? WHERE nisn=?";
 
             PreparedStatement ps
                     = conn.prepareStatement(sqlUpdate);
 
+            // Mengisi parameter query.
             ps.setString(1, pathQR);
             ps.setString(2, nisn);
 
+            // Menjalankan proses update database.
             ps.executeUpdate();
 
         } catch (Exception e) {
 
-            JOptionPane.showMessageDialog(this,
+            // Menampilkan pesan jika proses pembuatan QR Code gagal.
+            JOptionPane.showMessageDialog(
+                    this,
                     "Gagal membuat QR\n" + e.getMessage());
 
         }
@@ -628,13 +690,17 @@ public class tambahSiswa extends javax.swing.JDialog {
 
     private void bSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSimpanActionPerformed
         // TODO add your handling code here:
+        // Mengambil data yang diinputkan pada form.
         String ID = tIDSiswa.getText();
         String nis = tNISN1.getText();
         String nama = tNama.getText();
         String jk = cbJK.getSelectedItem().toString();
 
+        // Menyiapkan variabel untuk menyimpan jenis kelamin
+        // dalam bentuk singkatan yang akan disimpan ke database.
         String j_k = null;
 
+        // Mengubah pilihan jenis kelamin menjadi kode "L" atau "P".
         switch (jk) {
             case "Laki-Laki":
                 j_k = "L";
@@ -644,26 +710,39 @@ public class tambahSiswa extends javax.swing.JDialog {
                 break;
         }
 
+        // Mengambil data alamat dan nomor telepon.
         String alamat = tAlamat.getText();
         String hp = tTelepon.getText();
-        
+
+        // Memastikan pengguna sudah memilih kelas.
         if (cbKelas.getSelectedItem() == null) {
             JOptionPane.showMessageDialog(null, "Kelas harus dipilih!");
             return;
         }
+
+        // Mengambil ID kelas berdasarkan nama kelas yang dipilih.
         String kelas = idKelas(cbKelas.getSelectedItem().toString());
 
+        // Mengambil tanggal lahir dari komponen kalender.
         java.util.Date tanggal = jTGL.getDate();
 
+        // Mengubah tanggal menjadi format java.sql.Date
+        // agar dapat disimpan ke database.
         java.sql.Date tgl = new java.sql.Date(tanggal.getTime());
 
         try {
+
+            // Query SQL untuk menambahkan data siswa ke database.
             String sql = "INSERT INTO siswa(id_siswa, nisn, nama_siswa, jenis_kelamin, tgl_lahir, alamat, no_telepon, id_kelas)"
                     + " VALUES(?,?,?,?,?,?,?,?)";
 
+            // Membuka koneksi ke database.
             Connection conn = Koneksi.konek();
+
+            // Menyiapkan query SQL yang memiliki parameter.
             PreparedStatement ps = conn.prepareStatement(sql);
 
+            // Mengisi setiap parameter pada query.
             ps.setString(1, ID);
             ps.setString(2, nis);
             ps.setString(3, nama);
@@ -673,19 +752,25 @@ public class tambahSiswa extends javax.swing.JDialog {
             ps.setString(7, hp);
             ps.setString(8, kelas);
 
+            // Menjalankan query untuk menyimpan data siswa.
             ps.executeUpdate();
 
-            // Generate QR otomatis
+            // Membuat QR Code secara otomatis setelah data berhasil disimpan.
             generateQRCode(nis, nama, kelas);
 
+            // Menampilkan pesan bahwa data berhasil disimpan.
             JOptionPane.showMessageDialog(this,
                     "Data berhasil disimpan.");
 
-            pS.load_table_siswa();
+            // Memuat kembali data siswa agar tabel langsung diperbarui.
+            pS.load_table_siswa("");
+
+            // Menutup form tambah siswa.
             dispose();
 
         } catch (Exception e) {
 
+            // Menampilkan pesan jika proses penyimpanan gagal.
             JOptionPane.showMessageDialog(this,
                     e.getMessage());
 

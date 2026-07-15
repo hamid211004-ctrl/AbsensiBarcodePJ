@@ -39,17 +39,19 @@ public class ubahSiswa extends javax.swing.JDialog {
         this.pS = pS;
 
         loadComboKelass();
-        
+
         borderLengkung(panelUtama, "#828282");
-        
+
+        // ID siswa hanya ditampilkan dan tidak dapat diubah oleh pengguna.
         tIDSiswa.setEditable(false);
         tIDSiswa.setFocusable(false);
 
+        // Memberikan fokus awal ke field NISN.
         java.awt.EventQueue.invokeLater(() -> {
             tNISN1.requestFocusInWindow();
         });
     }
-    
+
     //method untuk custom panel supaya ada roundnya dan bordernya
     void borderLengkung(JPanel panel, String hexColor) {
         panel.setBorder(new FlatLineBorder(
@@ -60,102 +62,138 @@ public class ubahSiswa extends javax.swing.JDialog {
         ));
     }
 
+    // Method untuk mengambil data kelas dari database
+    // kemudian menampilkannya pada ComboBox.
     void loadComboKelass() {
-
-        cbKelas.removeAllItems();
 
         try {
 
+            // Query untuk mengambil seluruh data kelas.
             String sql = "SELECT * FROM kelas";
 
+            // Membuka koneksi ke database.
             Connection conn = Koneksi.konek();
 
+            // Membuat statement SQL.
             Statement statement = conn.createStatement();
 
+            // Menjalankan query.
             ResultSet resultSet = statement.executeQuery(sql);
 
+            // Menambahkan nama kelas ke dalam ComboBox.
             while (resultSet.next()) {
                 cbKelas.addItem(resultSet.getString("nama_kelas"));
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
 
         }
+
+        // Mengosongkan pilihan awal ComboBox.
+        cbKelas.setSelectedItem(null);
     }
 
+    // Method untuk mendapatkan ID kelas berdasarkan nama kelas.
     String idKelas(String namaKelas) {
-        try {
-            //query dengan paramenter untuk mencari guru berdasarkan nama 
-            String sql = "SELECT * FROM kelas WHERE nama_kelas = ?";
-            //membuka koneksi ke database 
-            Connection conn = Koneksi.konek();
-            //siapkan preparedStatement 
-            PreparedStatement ps = conn.prepareStatement(sql);
-            //isi paramenter query dengan nama jurusan 
-            ps.setString(1, namaKelas
-            );
 
-            //menjalankan query dan menyimpan hasilnya dalam resultSet 
+        try {
+
+            // Query untuk mencari ID kelas berdasarkan nama kelas.
+            String sql = "SELECT * FROM kelas WHERE nama_kelas = ?";
+
+            // Membuka koneksi ke database.
+            Connection conn = Koneksi.konek();
+
+            // Menyiapkan PreparedStatement.
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            // Mengisi parameter nama kelas.
+            ps.setString(1, namaKelas);
+
+            // Menjalankan query.
             ResultSet rs = ps.executeQuery();
 
-            //jika data ditemukan, kembalikan NIP guru 
+            // Mengembalikan ID kelas jika data ditemukan.
             while (rs.next()) {
                 return rs.getString("id_kelas");
             }
+
         } catch (SQLException e) {
-            //jika error, kembalikan string kosong 
+
+            // Mengembalikan string kosong jika terjadi kesalahan.
             return "";
+
         }
-        //jika tidak ditemukan, kembalikan string kosong 
+
+        // Mengembalikan string kosong jika data tidak ditemukan.
         return "";
     }
 
+    // Method untuk menampilkan data siswa yang dipilih ke dalam form ubah.
     public void setDataSiswa(String ID, String NIS, String namaSiswa, String JK,
             String tglLahir, String Alamat, String NoTelp, String idKelas) {
 
+        // Menampilkan data ID, NISN, dan nama siswa ke dalam field.
         tIDSiswa.setText(ID);
         tNISN1.setText(NIS);
         tNama.setText(namaSiswa);
 
+        // Mengubah kode jenis kelamin menjadi teks yang ditampilkan pada ComboBox.
         if (JK.equals("L")) {
             cbJK.setSelectedItem("Laki-Laki");
         } else {
-            cbJK.setSelectedItem("perempuan");
+            cbJK.setSelectedItem("Perempuan");
         }
 
+        // Menampilkan tanggal lahir jika data tersedia.
         if (tglLahir != null && !tglLahir.isEmpty()) {
             try {
+                // Mengubah String menjadi Date agar dapat ditampilkan pada JDateChooser.
                 jTGL.setDate(java.sql.Date.valueOf(tglLahir));
             } catch (IllegalArgumentException e) {
+
+                // Mengosongkan tanggal jika format tidak valid.
                 jTGL.setDate(null);
+
             }
         } else {
+
+            // Mengosongkan tanggal jika tidak ada data.
             jTGL.setDate(null);
+
         }
 
+        // Menampilkan alamat dan nomor telepon.
         tAlamat.setText(Alamat);
         tTelepon.setText(NoTelp);
 
         try {
+
+            // Membuka koneksi ke database.
             Connection conn = Koneksi.konek();
 
+            // Query untuk mengambil nama kelas berdasarkan ID kelas.
             String sql = "SELECT nama_kelas FROM kelas WHERE id_kelas=?";
 
+            // Menyiapkan query SQL yang memiliki parameter.
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, idKelas);
 
+            // Menjalankan query.
             ResultSet rs = ps.executeQuery();
 
+            // Jika data kelas ditemukan, tampilkan nama kelas pada ComboBox.
             if (rs.next()) {
-                System.out.println("ID sebelum = " + idKelas);
+
                 cbKelas.setSelectedItem(rs.getString("nama_kelas"));
-                System.out.println("ID sesudah = " + idKelas);
 
             }
 
         } catch (Exception e) {
+
+            // Menampilkan informasi error pada console jika terjadi kesalahan.
             e.printStackTrace();
+
         }
     }
 
@@ -550,12 +588,17 @@ public class ubahSiswa extends javax.swing.JDialog {
 
     private void bUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bUbahActionPerformed
         // TODO add your handling code here:
+        // Mengambil data yang diinputkan pada form.
         String ID = tIDSiswa.getText();
         String NISN = tNISN1.getText();
         String namaSiswa = tNama.getText();
         String jenisKelamin = cbJK.getSelectedItem().toString();
+
+        // Menyiapkan variabel untuk menyimpan jenis kelamin
+        // dalam bentuk singkatan yang akan disimpan ke database.
         String JK = null;
 
+        // Mengubah pilihan jenis kelamin menjadi kode "L" atau "P".
         switch (jenisKelamin) {
             case "Laki-Laki":
                 JK = "L";
@@ -568,26 +611,37 @@ public class ubahSiswa extends javax.swing.JDialog {
                 break;
         }
 
+        // Mengambil tanggal lahir dari komponen kalender.
         Date tglLahirDate = jTGL.getDate();
 
-        //validasi tanggal agar user tetap memilih
+        // Memastikan pengguna sudah memilih tanggal lahir.
         if (tglLahirDate == null) {
             JOptionPane.showMessageDialog(this, "Tanggal lahir belum dipilih!!!");
             return;
         }
+
+        // Mengubah tanggal lahir ke format "yyyy-MM-dd".
         String tgl = new SimpleDateFormat("yyyy-MM-dd").format(tglLahirDate);
+
+        // Mengambil data alamat, nomor telepon, dan ID kelas.
         String alamat = tAlamat.getText();
         String hp = tTelepon.getText();
         String namaKelas = idKelas(cbKelas.getSelectedItem().toString());
 
-        
         try {
+
+            // Query SQL untuk memperbarui data siswa berdasarkan ID siswa.
             String sql = "UPDATE siswa SET nama_siswa=?,"
                     + " jenis_kelamin=?, tgl_lahir=?, alamat=?, no_telepon=?,"
                     + " id_kelas=? WHERE id_siswa=?";
+
+            // Membuka koneksi ke database.
             Connection conn = Koneksi.konek();
+
+            // Menyiapkan query SQL yang memiliki parameter.
             PreparedStatement ps = conn.prepareStatement(sql);
 
+            // Mengisi setiap parameter pada query.
             ps.setString(1, NISN);
             ps.setString(2, namaSiswa);
             ps.setString(3, JK);
@@ -597,13 +651,24 @@ public class ubahSiswa extends javax.swing.JDialog {
             ps.setString(7, namaKelas);
             ps.setString(8, ID);
 
+            // Menjalankan proses update data.
             ps.execute();
+
+            // Menampilkan pesan jika data berhasil diubah.
             JOptionPane.showInternalMessageDialog(null, "Data berhasil diubah");
-            pS.load_table_siswa();
+
+            // Memuat kembali data siswa agar tabel langsung diperbarui.
+            pS.load_table_siswa("");
+
         } catch (SQLException e) {
+
+            // Menampilkan pesan jika proses update gagal.
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, e.getMessage());
+
         }
+
+        // Menutup form ubah siswa.
         dispose();
     }//GEN-LAST:event_bUbahActionPerformed
 

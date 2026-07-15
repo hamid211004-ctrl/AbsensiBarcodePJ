@@ -42,7 +42,7 @@ public class panelGenerateQR extends javax.swing.JPanel {
     // Menentukan mode tampilan QR Code (per kelas atau semua siswa).
     private boolean modeperKelas = true;
 
-    // Objek card QR yang digunakan untuk menampilkan data siswa.
+    // Objek card QR untuk menampilkan data siswa.
     private cardQR pQR;
 
     /**
@@ -51,7 +51,8 @@ public class panelGenerateQR extends javax.swing.JPanel {
     public panelGenerateQR() {
         initComponents();
 
-        loadComboKelass(); // Memuat data kelas ke ComboBox.
+        // Memuat data kelas ke dalam ComboBox.
+        loadComboKelass();
 
         // Mengatur layout panel agar card QR tersusun secara otomatis.
         panelContainer.setLayout(new WrapLayout(
@@ -59,9 +60,10 @@ public class panelGenerateQR extends javax.swing.JPanel {
                 45,
                 45));
 
-        setPreferredSize(new Dimension(220, 300)); // Mengatur ukuran panel.
+        // Mengatur ukuran panel.
+        setPreferredSize(new Dimension(220, 300));
 
-        // Mengatur kecepatan scroll.
+        // Mengatur kecepatan scroll pada panel.
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
 
         // Menampilkan seluruh QR Code saat panel pertama kali dibuka.
@@ -70,19 +72,21 @@ public class panelGenerateQR extends javax.swing.JPanel {
         tampilkanQRCode();
     }
 
-    // Method untuk menampilkan QR Code pada panel.
+    // Method untuk menampilkan QR Code siswa pada panel.
     private void tampilkanQRCode() {
 
-        panelContainer.removeAll(); // Menghapus seluruh card sebelumnya.
+        // Menghapus seluruh card QR yang sudah ditampilkan sebelumnya.
+        panelContainer.removeAll();
 
         try {
 
-            Connection conn = Koneksi.konek(); // Membuka koneksi ke database.
+            // Membuka koneksi ke database.
+            Connection conn = Koneksi.konek();
 
             String sql;
             PreparedStatement ps;
 
-            // Jika mode per kelas aktif.
+            // Jika mode per kelas aktif, tampilkan QR Code berdasarkan kelas yang dipilih.
             if (modeperKelas) {
 
                 sql = "SELECT s.nisn, "
@@ -95,13 +99,12 @@ public class panelGenerateQR extends javax.swing.JPanel {
 
                 ps = conn.prepareStatement(sql);
 
-                // Mengisi parameter id kelas.
-                ps.setString(1,
-                        idKelas(cKelas.getSelectedItem().toString()));
+                // Mengisi parameter ID kelas.
+                ps.setString(1, idKelas(cKelas.getSelectedItem().toString()));
 
             } else {
 
-                // Query untuk mengambil seluruh data siswa.
+                // Jika mode semua siswa aktif, tampilkan seluruh data siswa.
                 sql = "SELECT s.nisn, "
                         + "s.nama_siswa, "
                         + "k.nama_kelas, "
@@ -113,26 +116,31 @@ public class panelGenerateQR extends javax.swing.JPanel {
 
             }
 
-            ResultSet rs = ps.executeQuery(); // Menjalankan query.
+            // Menjalankan query.
+            ResultSet rs = ps.executeQuery();
 
             // Menampilkan setiap data siswa dalam bentuk card QR.
             while (rs.next()) {
 
-                cardQR card = new cardQR(); // Membuat card baru.
+                // Membuat card QR baru.
+                cardQR card = new cardQR();
 
+                // Mengirim data siswa ke card QR.
                 card.setData(
-                        rs.getString("nama_siswa"), // Nama siswa.
-                        rs.getString("nisn"), // NISN siswa.
-                        rs.getString("nama_kelas"), // Nama kelas.
-                        rs.getString("qr") // Path QR Code.
+                        rs.getString("nama_siswa"),
+                        rs.getString("nisn"),
+                        rs.getString("nama_kelas"),
+                        rs.getString("qr")
                 );
 
-                panelContainer.add(card); // Menambahkan card ke panel.
+                // Menambahkan card ke panel.
+                panelContainer.add(card);
 
             }
 
-            panelContainer.revalidate(); // Memperbarui layout panel.
-            panelContainer.repaint(); // Menggambar ulang panel.
+            // Memperbarui tampilan panel.
+            panelContainer.revalidate();
+            panelContainer.repaint();
 
         } catch (Exception e) {
 
@@ -147,15 +155,19 @@ public class panelGenerateQR extends javax.swing.JPanel {
 
         try {
 
-            String sql = "SELECT * FROM kelas"; // Query mengambil seluruh data kelas.
+            // Query untuk mengambil seluruh data kelas.
+            String sql = "SELECT * FROM kelas";
 
-            Connection conn = Koneksi.konek(); // Membuka koneksi database.
+            // Membuka koneksi ke database.
+            Connection conn = Koneksi.konek();
 
-            Statement statement = conn.createStatement(); // Membuat statement.
+            // Membuat statement SQL.
+            Statement statement = conn.createStatement();
 
-            ResultSet resultSet = statement.executeQuery(sql); // Menjalankan query.
+            // Menjalankan query.
+            ResultSet resultSet = statement.executeQuery(sql);
 
-            // Menambahkan nama kelas ke ComboBox.
+            // Menambahkan nama kelas ke dalam ComboBox.
             while (resultSet.next()) {
                 cKelas.addItem(resultSet.getString("nama_kelas"));
             }
@@ -176,13 +188,17 @@ public class panelGenerateQR extends javax.swing.JPanel {
             // Query untuk mencari ID kelas berdasarkan nama kelas.
             String sql = "SELECT * FROM kelas WHERE nama_kelas = ?";
 
-            Connection conn = Koneksi.konek(); // Membuka koneksi database.
+            // Membuka koneksi ke database.
+            Connection conn = Koneksi.konek();
 
-            PreparedStatement ps = conn.prepareStatement(sql); // Menyiapkan PreparedStatement.
+            // Menyiapkan query SQL yang memiliki parameter.
+            PreparedStatement ps = conn.prepareStatement(sql);
 
-            ps.setString(1, namaKelas); // Mengisi parameter nama kelas.
+            // Mengisi parameter nama kelas.
+            ps.setString(1, namaKelas);
 
-            ResultSet rs = ps.executeQuery(); // Menjalankan query.
+            // Menjalankan query.
+            ResultSet rs = ps.executeQuery();
 
             // Mengembalikan ID kelas jika data ditemukan.
             while (rs.next()) {
@@ -191,7 +207,8 @@ public class panelGenerateQR extends javax.swing.JPanel {
 
         } catch (SQLException e) {
 
-            return ""; // Mengembalikan string kosong jika terjadi error.
+            // Mengembalikan string kosong jika terjadi kesalahan.
+            return "";
 
         }
 
@@ -433,49 +450,57 @@ public class panelGenerateQR extends javax.swing.JPanel {
     // Mengunduh seluruh QR Code ke dalam satu folder.
     private void bDownloadSemuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bDownloadSemuaActionPerformed
         // TODO add your handling code here:
-        JFileChooser chooser = new JFileChooser(); // Membuat dialog pemilihan folder.
+        // Membuat dialog untuk memilih lokasi penyimpanan QR Code.
+        JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Pilih lokasi penyimpanan");
-        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY); // Hanya memilih folder.
 
+        // Pengguna hanya diperbolehkan memilih folder.
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+        // Jika pengguna menekan tombol Simpan.
         if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
 
-            File lokasi = chooser.getSelectedFile(); // Mengambil folder tujuan.
+            // Mengambil folder yang dipilih pengguna.
+            File lokasi = chooser.getSelectedFile();
 
-            // Meminta nama folder penyimpanan QR Code.
+            // Meminta pengguna memasukkan nama folder penyimpanan QR Code.
             String namaFolder = JOptionPane.showInputDialog(
                     this,
                     "Nama Folder :",
                     "QR Siswa");
 
-            // Membatalkan proses jika nama folder kosong.
+            // Jika nama folder kosong atau dibatalkan, proses dihentikan.
             if (namaFolder == null || namaFolder.trim().isEmpty()) {
                 return;
             }
 
-            File folderQR = new File(lokasi, namaFolder); // Membuat objek folder.
+            // Membuat objek folder tujuan berdasarkan lokasi dan nama folder.
+            File folderQR = new File(lokasi, namaFolder);
 
-            // Membuat folder jika belum tersedia.
+            // Jika folder belum ada, maka folder akan dibuat.
             if (!folderQR.exists()) {
                 folderQR.mkdirs();
             }
 
-            // Menyimpan seluruh QR Code yang ada pada panel.
+            // Melakukan perulangan untuk setiap card QR yang ada di panel.
             for (Component c : panelContainer.getComponents()) {
 
+                // Memastikan komponen merupakan cardQR.
                 if (c instanceof cardQR) {
 
                     cardQR card = (cardQR) c;
 
-                    // Menentukan nama file berdasarkan nama siswa.
+                    // Membuat nama file menggunakan nama siswa dengan format PNG.
                     File file = new File(
                             folderQR,
                             card.getNama() + ".png");
 
-                    card.simpanQR(file); // Menyimpan QR Code ke file PNG.
+                    // Menyimpan gambar QR Code ke file.
+                    card.simpanQR(file);
                 }
             }
 
-            // Menampilkan pesan bahwa proses berhasil.
+            // Menampilkan pesan bahwa seluruh QR Code berhasil disimpan.
             JOptionPane.showMessageDialog(
                     this,
                     "Berhasil disimpan di\n" + folderQR.getAbsolutePath());

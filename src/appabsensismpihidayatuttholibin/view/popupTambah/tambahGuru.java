@@ -25,28 +25,28 @@ import javax.swing.table.DefaultTableModel;
  * @author ASUS
  */
 public class tambahGuru extends javax.swing.JDialog {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(tambahGuru.class.getName());
     //untuk membersihkan tabel setelah simpan
     private panelGuru pG;
-    
+
     /**
      * Creates new form tambahGuru
      */
     public tambahGuru(java.awt.Frame parent, boolean modal, panelGuru pG) {
         super(parent, modal);
         initComponents();
-        
+
         //supaya JDialognya tranparan jadi roundnya jadi kelihatan dehh
         this.setBackground(new Color(0, 0, 0, 0));
         if (this.getContentPane() instanceof javax.swing.JComponent) {
             ((javax.swing.JComponent) this.getContentPane()).setOpaque(false);
         }
-        
+
         borderLengkung(panelUtama, "#828282");
 
         this.pG = pG;
-        
+
         generateIdGuru();
 
         tID.setEditable(false);
@@ -56,14 +56,14 @@ public class tambahGuru extends javax.swing.JDialog {
             tNIP1.requestFocusInWindow();
         });
     }
-    
+
     // membuat method bersih untuk tcari yang apabila diklik tulisan akan hilang
-    void bersih(){
+    void bersih() {
         tNIP1.setText("NIP/NIY");
         tNama.setText("Nama Guru");
         tTelepon.setText("No Telepon");
     }
-    
+
     //method untuk custom panel supaya ada roundnya dan bordernya
     void borderLengkung(JPanel panel, String hexColor) {
         panel.setBorder(new FlatLineBorder(
@@ -73,29 +73,53 @@ public class tambahGuru extends javax.swing.JDialog {
                 20
         ));
     }
-    
+
+    // Method untuk membuat ID guru secara otomatis.
     private void generateIdGuru() {
+
         try {
+
+            // Membuka koneksi ke database.
             Connection conn = Koneksi.konek();
+
+            // Membuat statement untuk menjalankan query.
             Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT id_guru FROM guru ORDER BY id_guru DESC LIMIT 1");
+
+            // Mengambil ID guru terakhir berdasarkan urutan terbesar.
+            ResultSet rs = st.executeQuery(
+                    "SELECT id_guru FROM guru ORDER BY id_guru DESC LIMIT 1");
 
             if (rs.next()) {
-                //ambil angka setelah ABS
+
+                // Mengambil bagian angka dari ID, misalnya GRU001 menjadi 001.
                 String id = rs.getString("id_guru").substring(3);
+
+                // Mengubah angka menjadi integer kemudian menambah 1.
                 int no = Integer.parseInt(id) + 1;
 
+                // Membuat ID baru dengan format GRU001, GRU002, dan seterusnya.
                 tID.setText(String.format("GRU%03d", no));
+
             } else {
+
+                // Jika belum ada data guru, maka ID pertama adalah GRU001.
                 tID.setText("GRU001");
+
             }
+
+            // Menutup ResultSet dan Statement.
             rs.close();
             st.close();
+
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Gagal generate ID : " + e.getMessage());
+
+            // Menampilkan pesan jika proses pembuatan ID gagal.
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Gagal generate ID : " + e.getMessage());
+
         }
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -458,12 +482,11 @@ public class tambahGuru extends javax.swing.JDialog {
         dispose();
     }//GEN-LAST:event_lCloseMouseClicked
 
-    
     //Memberi fokus gained agar tulisan di text field kosong saat di klik
     private void tIDFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tIDFocusGained
         // TODO add your handling code here:
         String NIP = tNIP1.getText();
-        if(NIP.equals("NIP/NIY")){
+        if (NIP.equals("NIP/NIY")) {
             tNIP1.setText("");
         }
     }//GEN-LAST:event_tIDFocusGained
@@ -471,7 +494,7 @@ public class tambahGuru extends javax.swing.JDialog {
     private void tNamaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tNamaFocusGained
         // TODO add your handling code here:
         String nama = tNama.getText();
-        if(nama.equals("Nama Guru")){
+        if (nama.equals("Nama Guru")) {
             tNama.setText("");
         }
     }//GEN-LAST:event_tNamaFocusGained
@@ -479,18 +502,17 @@ public class tambahGuru extends javax.swing.JDialog {
     private void tTeleponFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tTeleponFocusGained
         // TODO add your handling code here:
         String telepon = tTelepon.getText();
-        if(telepon.equals("No Telepon")){
+        if (telepon.equals("No Telepon")) {
             tTelepon.setText("");
         }
     }//GEN-LAST:event_tTeleponFocusGained
 
-    
     //Memberi fokus lost agar tulisan di text field kosong saat di klik
     //dan kembali lagi jika tidak jadi dinputkan
     private void tIDFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tIDFocusLost
         // TODO add your handling code here:
         String NIP = tNIP1.getText();
-        if(NIP.equals("")||NIP.equals("NIP/NIY")){
+        if (NIP.equals("") || NIP.equals("NIP/NIY")) {
             tNIP1.setText("NIP/NIY");
         }
     }//GEN-LAST:event_tIDFocusLost
@@ -498,7 +520,7 @@ public class tambahGuru extends javax.swing.JDialog {
     private void tNamaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tNamaFocusLost
         // TODO add your handling code here:
         String nama = tNama.getText();
-        if(nama.equals("")||nama.equals("Nama Guru")){
+        if (nama.equals("") || nama.equals("Nama Guru")) {
             tNama.setText("Nama Guru");
         }
     }//GEN-LAST:event_tNamaFocusLost
@@ -506,30 +528,32 @@ public class tambahGuru extends javax.swing.JDialog {
     private void tTeleponFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tTeleponFocusLost
         // TODO add your handling code here:
         String telepon = tTelepon.getText();
-        if(telepon.equals("")||telepon.equals("No Telepon")){
+        if (telepon.equals("") || telepon.equals("No Telepon")) {
             tTelepon.setText("No Telepon");
         }
     }//GEN-LAST:event_tTeleponFocusLost
 
     private void bSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSimpanActionPerformed
         // TODO add your handling code here:
-        //Ambil input dari text field dan combo box pada GUI
+        // Mengambil data yang diinputkan pada form.
         String idGuru = tID.getText();
         String NIP = tNIP1.getText();
         String namaGuru = tNama.getText();
         String JK = cbJK.getSelectedItem().toString();
         Date tanggalLahir = tTanggal.getDate();
-        // Mengubah tanggal lahir menjadi format "yyyy-MM-dd"
+
+        // Mengubah tanggal lahir ke format "yyyy-MM-dd".
         String tglLahir = new SimpleDateFormat("yyyy-MM-dd").format(tanggalLahir);
-        
+
         String alamat = tAlamat.getText();
         String no = tTelepon.getText();
-        
-        //menyiapkan variabel j_k (jeniskelamin dalam format singkatan "L" atau "P" 
+
+        // Menyiapkan variabel untuk menyimpan jenis kelamin
+        // dalam bentuk singkatan yang akan disimpan di database.
         String j_k = null;
-        
-        //mengubah nilai JK dari lanel menjadi format singkatan yang disimpan di database
-        switch (JK){
+
+        // Mengubah pilihan jenis kelamin menjadi kode "L" atau "P".
+        switch (JK) {
             case "Laki-Laki":
                 j_k = "L";
                 break;
@@ -540,18 +564,19 @@ public class tambahGuru extends javax.swing.JDialog {
                 j_k = "null";
                 break;
         }
-        
+
         try {
-            //Query SQL untuk menyisipkan data ke tabel guru
+
+            // Query SQL untuk menambahkan data guru ke database.
             String sql = "INSERT INTO guru(id_guru, nip, nama_guru, jenis_kelamin, tgl_lahir, alamat, no_telepon) VALUES(?,?,?,?,?,?,?)";
 
-            //Buat koneksi ke database menggunakan method koneksi() dari class koneksi
+            // Membuka koneksi ke database.
             Connection conn = Koneksi.konek();
 
-            //Siapkan query SQL untuk dieksekusi dengan parameter
+            // Menyiapkan query SQL yang memiliki parameter.
             PreparedStatement ps = conn.prepareStatement(sql);
 
-            //isi parameter
+            // Mengisi setiap parameter pada query.
             ps.setString(1, idGuru);
             ps.setString(2, NIP);
             ps.setString(3, namaGuru);
@@ -560,17 +585,23 @@ public class tambahGuru extends javax.swing.JDialog {
             ps.setString(6, alamat);
             ps.setString(7, no);
 
-            //Jalankan query untuk menyimpan data ke database
+            // Menjalankan query untuk menyimpan data.
             ps.executeUpdate();
 
-            //Tampilkan pesan bahwa data berhasil disimpan
+            // Menampilkan pesan jika data berhasil disimpan.
             JOptionPane.showInternalMessageDialog(null, "Data berhasil disimpan");
-            
+
+            // Memuat kembali data guru agar tabel langsung diperbarui.
             pG.load_tabel_guru();
+
         } catch (SQLException sQLException) {
-            //jika terjadi kesalahan saat menyimpan data, tampilkan pesan
+
+            // Menampilkan pesan jika proses penyimpanan gagal.
             JOptionPane.showMessageDialog(null, "Data gagal disimpan");
+
         }
+
+        // Menutup form setelah proses selesai.
         dispose();
     }//GEN-LAST:event_bSimpanActionPerformed
 
@@ -600,7 +631,7 @@ public class tambahGuru extends javax.swing.JDialog {
     private void tNIP1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tNIP1FocusGained
         // TODO add your handling code here:
         String NIP = tNIP1.getText();
-        if(NIP.equals("NIP/NIY")){
+        if (NIP.equals("NIP/NIY")) {
             tNIP1.setText("");
         }
     }//GEN-LAST:event_tNIP1FocusGained
@@ -608,7 +639,7 @@ public class tambahGuru extends javax.swing.JDialog {
     private void tNIP1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tNIP1FocusLost
         // TODO add your handling code here:
         String NIP = tNIP1.getText();
-        if(NIP.equals("")||NIP.equals("NIP/NIY")){
+        if (NIP.equals("") || NIP.equals("NIP/NIY")) {
             tNIP1.setText("NIP/NIY");
         }
     }//GEN-LAST:event_tNIP1FocusLost

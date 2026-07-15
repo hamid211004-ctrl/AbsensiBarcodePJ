@@ -24,7 +24,10 @@ import javax.swing.JPanel;
  */
 public class cardQR extends javax.swing.JPanel {
 
+    // Menyimpan gambar QR Code dalam bentuk BufferedImage.
     private BufferedImage qrImage;
+
+    // Menyimpan data siswa.
     private String nama;
     private String nis;
     private String kelas;
@@ -47,51 +50,64 @@ public class cardQR extends javax.swing.JPanel {
         ));
     }
 
+    // Mengembalikan panel QR.
     public JPanel getPanelQR() {
         return panelQR;
     }
-    
+
+    // Mengambil nama siswa dari label.
     public String getNama() {
         return lNama.getText();
     }
 
+    // Mengambil NISN siswa dari label.
     public String getNISN() {
         return lNISN.getText();
     }
 
+    // Method untuk menampilkan data siswa dan QR Code ke dalam card.
     public void setData(String nama,
             String nis,
             String kelas,
             String pathQR) {
 
+        // Menampilkan data siswa pada label.
         lNISN.setText(nama);
         lNama.setText(nis);
         lKelas.setText(kelas);
 
+        // Membaca gambar QR Code dari lokasi file.
         ImageIcon icon = new ImageIcon(pathQR);
 
+        // Mengubah ukuran gambar agar sesuai dengan panel.
         Image img = icon.getImage().getScaledInstance(
                 265,
                 265,
                 Image.SCALE_SMOOTH);
 
+        // Menampilkan gambar QR Code pada JLabel.
         lQR.setIcon(new ImageIcon(img));
     }
 
+    // Method untuk mengunduh satu QR Code.
     private void downloadQR() {
 
         try {
 
+            // Membuka dialog untuk memilih lokasi penyimpanan file.
             JFileChooser chooser = new JFileChooser();
             chooser.setSelectedFile(new File(lNama.getText() + ".png"));
 
+            // Jika pengguna membatalkan proses, method dihentikan.
             if (chooser.showSaveDialog(this)
                     != JFileChooser.APPROVE_OPTION) {
                 return;
             }
 
+            // Mengambil file tujuan penyimpanan.
             File file = chooser.getSelectedFile();
 
+            // Membuat gambar baru sesuai ukuran panel QR.
             BufferedImage image = new BufferedImage(
                     panelQR.getWidth(),
                     panelQR.getHeight(),
@@ -99,18 +115,21 @@ public class cardQR extends javax.swing.JPanel {
 
             Graphics2D g2 = image.createGraphics();
 
-            // Hanya menggambar panel QR
+            // Menggambar seluruh isi panel QR ke dalam gambar.
             panelQR.printAll(g2);
 
             g2.dispose();
 
+            // Menyimpan gambar dalam format PNG.
             ImageIO.write(image, "png", file);
 
+            // Menampilkan pesan jika proses berhasil.
             JOptionPane.showMessageDialog(this,
                     "QR berhasil didownload.");
 
         } catch (Exception e) {
 
+            // Menampilkan pesan jika terjadi kesalahan.
             JOptionPane.showMessageDialog(this,
                     e.getMessage());
 
@@ -118,14 +137,16 @@ public class cardQR extends javax.swing.JPanel {
 
     }
 
+    // Method untuk menyimpan QR Code ke file PNG.
     public void simpanQR(File file) {
 
         try {
 
-            // Pastikan ukuran panel sudah ada
+            // Mengambil ukuran panel QR.
             int width = panelQR.getWidth();
             int height = panelQR.getHeight();
 
+            // Membuat gambar baru sesuai ukuran panel.
             BufferedImage image = new BufferedImage(
                     width,
                     height,
@@ -133,18 +154,21 @@ public class cardQR extends javax.swing.JPanel {
 
             Graphics2D g2 = image.createGraphics();
 
-            // Background putih
+            // Memberikan warna latar belakang putih.
             g2.setColor(Color.WHITE);
             g2.fillRect(0, 0, width, height);
 
-            // Gambar seluruh panelQR
+            // Menggambar seluruh isi panel QR ke gambar.
             panelQR.paint(g2);
 
             g2.dispose();
 
+            // Menyimpan gambar ke file PNG.
             ImageIO.write(image, "png", file);
 
         } catch (Exception e) {
+
+            // Menampilkan error pada console jika proses gagal.
             e.printStackTrace();
         }
     }
